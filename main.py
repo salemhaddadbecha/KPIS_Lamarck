@@ -1,0 +1,36 @@
+#import connectors.__init__
+from modules.update_tables.update_candidats_table import check_new_and_update_candidates
+from modules.update_tables.update_resources_table import check_new_and_update_resources
+from modules.update_tables.update_besoins_table import check_new_and_update_besoins
+from modules.update_tables.update_projets_table import check_new_and_update_projets
+from modules.update_tables.update_prestations_table import check_new_and_update_prestations
+from modules.update_tables.update_contacts_table import check_new_and_update_contacts
+from modules.update_tables.update_actions_table import check_new_and_update_actions
+from modules.update_tables.update_temps_table import check_new_and_update_temps
+
+
+from modules.controle_qualite.controle_qualite_kpi1 import controle_qualite_kpi1
+from modules.controle_qualite.controle_qualite_kpi2 import controle_qualite_kpi2
+from modules.controle_qualite.controle_qualite_kpi3 import controle_qualite_kpi3
+from modules.controle_qualite.controle_qualite_kpi6 import controle_qualite_kpi6
+from modules.controle_qualite.controle_qualite_kpi8 import controle_qualite_kpi8
+from modules.controle_qualite.controle_qualite_kpi12 import controle_qualite_kpi12
+from modules.controle_qualite.controle_qualite_kpi16 import controle_qualite_kpi16
+
+
+check_new_and_update_candidates()
+check_new_and_update_resources()
+check_new_and_update_besoins()
+check_new_and_update_projets()
+check_new_and_update_prestations()
+check_new_and_update_contacts()
+check_new_and_update_actions()
+check_new_and_update_temps()
+
+controle_qualite_kpi1()
+controle_qualite_kpi2()
+controle_qualite_kpi3()
+controle_qualite_kpi6()
+controle_qualite_kpi8()
+controle_qualite_kpi12()
+controle_qualite_kpi16()
