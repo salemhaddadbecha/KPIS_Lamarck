@@ -22,18 +22,10 @@ def controle_qualite_kpi6():
 
     # Point de contrôle 1:
     """
-    Existence pour tous les consultants d’au
-    moins une ligne dans le bloc Ressources > Administratif > Contrat RH
+    S’assurer que les soutenances soient bien renseignées
     """
     # TODO: Comment trouver la soutenance ? idée: on regarder tous les
     #  positionnemnts puis toutes les actions de la resources et on compare -> jamais de soutenance dans actions pq ?
     dprint(f"#- KPI6: contrôle qualité 1")
     controle_1(dates[0], dates[1])
 
-    # Point de contrôle 2:
-    """
-    Mettre à jour l’ensemble des titres de profils Ressources pour standardiser 
-    les titres avec le profil du consultant
-    """
-    #controle_2()
-    # TODO: signification ?

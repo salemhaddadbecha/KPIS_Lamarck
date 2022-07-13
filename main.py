@@ -16,8 +16,8 @@ from modules.controle_qualite.controle_qualite_kpi6 import controle_qualite_kpi6
 from modules.controle_qualite.controle_qualite_kpi8 import controle_qualite_kpi8
 from modules.controle_qualite.controle_qualite_kpi12 import controle_qualite_kpi12
 from modules.controle_qualite.controle_qualite_kpi16 import controle_qualite_kpi16
-
-
+"""
+"""
 check_new_and_update_candidates()
 check_new_and_update_resources()
 check_new_and_update_besoins()
@@ -33,4 +33,5 @@ controle_qualite_kpi3()
 controle_qualite_kpi6()
 controle_qualite_kpi8()
 controle_qualite_kpi12()
+
 controle_qualite_kpi16()
