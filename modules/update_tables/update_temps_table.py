@@ -1,14 +1,22 @@
-# Modules / Dépendances
+# Modules / Dependances
 from tables import Temps
-from modules.requests_tools import get_list_of_element
-from modules.safe_actions import safe_dict_get, safe_date_convert, dprint,safe_update_table_row, get_period_dates
+# Tools
+from tools.requests_tools import get_list_of_element
+from tools.safe_actions import safe_dict_get, safe_date_convert, dprint, safe_update_table_row
+
 
 def get_temps_all_informations(basic_data):
-    # Indexation d'éléments utiles:
+    """
+    Permet de recuperer toutes les informations utiles
+    d'un temps a partir de ses informations basiques
+    :param basic_data:
+    :return: informations utiles du temps
+    """
+    # Indexation d'elements utiles:
 
     # Infos à trouver
     informations = {
-        "boond_id": int(),
+        "boond_id": str(),
         "boond_resource_id": int(),
         "date_de_creation": None,
         "duree": float(),
@@ -20,28 +28,36 @@ def get_temps_all_informations(basic_data):
     informations["boond_resource_id"] = safe_dict_get(basic_data, ["relationships", "dependsOn", "data", "id"])
     informations["date_de_creation"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "startDate"]))
     informations["duree"] = safe_dict_get(basic_data, ["attributes", "value"])
-    if safe_dict_get(basic_data, ["attributes", "scorecard", "project"]) is not None:
+    if safe_dict_get(basic_data, ["attributes", "scorecard", "reference"]) == "durationOfProductionUsedTimePerProjects":
         informations["type"] = "mission"
         informations["boond_id_projet"] = safe_dict_get(basic_data, ["attributes", "scorecard", "project", "id"])
-    else:
+
+    elif safe_dict_get(basic_data, ["attributes", "scorecard", "reference"]) == "durationOfInternalUsedTime":
         informations["type"] = "interne"
+        informations["boond_id_projet"] = None
+
+    elif safe_dict_get(basic_data, ["attributes", "scorecard", "reference"]) == "durationOfAbsencesUsedTime":
+        informations["type"] = "absence"
         informations["boond_id_projet"] = None
 
     return informations
 
-def check_new_and_update_temps():
-    dates = get_period_dates()
 
-    # New temps -> type = onePeriod (tous les temps créent sur la période)
-    # Il y a un élément par mission dans "data", pour chaque élément on vérifie que sa durée est != de 0 (pas utile d'enregistré un temps vide)
-    # Un élément par temps renseigné est créé dans la table
-    dprint(f"#- New temps: period({dates[0]})")
-    list_of_new_temps = get_list_of_element("/reporting-resources", extractType="inDays", period="onePeriod", maxResources=10, startDate=dates[0], endDate=dates[1])
+def check_new_and_update_temps(start_date, end_date):
+    """
+    Met à jour et ajoute tous les nouveaux temps à la table Temps:
+    :param start_date:
+    :param end_date:
+    :return:
+    """
+    dprint(f"Update temps table", priority_level=3, preprint="\n")
+
+    list_of_new_temps = get_list_of_element("/reporting-resources", extractType="inDays", period="onePeriod",
+                                            maxResources=10, startDate=start_date, endDate=end_date)
     for temps in list_of_new_temps:
 
         if safe_dict_get(temps, ["attributes", "value"]) is not None and \
                 float(safe_dict_get(temps, ["attributes", "value"])) != float(0):
-
             new_temps_all_informations = get_temps_all_informations(temps)
 
             safe_update_table_row(
@@ -54,6 +70,4 @@ def check_new_and_update_temps():
                 boond_id_projet=new_temps_all_informations["boond_id_projet"],
                 boond_resource_id=new_temps_all_informations["boond_resource_id"]
             )
-            dprint(f"#-- Update candidat: {new_temps_all_informations['boond_id']}")
-
-    dprint("\n")
+            dprint(f"Update candidat: {new_temps_all_informations['boond_id']}", priority_level=4)

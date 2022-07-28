@@ -1,12 +1,31 @@
-# Modules / Dépendances
+# Modules / Dependances
 from tables import Controle_qualite
-from modules.requests_tools import request, get_list_of_element
-from modules.safe_actions import safe_dict_get, is_in_the_list, safe_update_table_row, get_current_date, dprint, get_period_dates
+# Tools
+from tools.requests_tools import request, get_list_of_element
+from tools.safe_actions import safe_dict_get, is_in_the_list, safe_update_table_row, get_current_date, dprint
 
 
 def controle_1(start_date, end_date):
-    def create_failure(contact):
-        def get_contact_provenance(contact):
+    """
+    Recupere les clients sans provenance
+    :param start_date:
+    :param end_date:
+    :return:
+    """
+
+    def _create_failure(contact):
+        """
+        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        :param contact:
+        :return:
+        """
+
+        def _get_contact_provenance(contact):
+            """
+            Permet de savoir si la provenance et le détail de la provenance d'un contact sont présents
+            :param contact:
+            :return: provenance et le détail de la provenance (Boolean)
+            """
             informations = request(f"/contacts/{contact['id']}/information")
             check = {
                 "provenance": False,
@@ -14,7 +33,8 @@ def controle_1(start_date, end_date):
             }
 
             if safe_dict_get(informations, ["data", "attributes", "origin", "typeOf"]) is not None and \
-                    not is_in_the_list([-1, "-1"], safe_dict_get(informations, ["data", "attributes", "origin", "typeOf"])):
+                    not is_in_the_list([-1, "-1"],
+                                       safe_dict_get(informations, ["data", "attributes", "origin", "typeOf"])):
                 check["provenance"] = True
 
             if safe_dict_get(informations, ["data", "attributes", "origin", "detail"]) is not None and \
@@ -23,46 +43,70 @@ def controle_1(start_date, end_date):
 
             return check
 
-        check = get_contact_provenance(contact)
+        check = _get_contact_provenance(contact)
 
+        defaut = "Defaut KPI8: Contact cree mais aucune provenance renseignee"
         if not check["provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
                 filters={"id_correspondant": safe_dict_get(contact, ["id"]),
-                         "nom_table_correspondante": "candidates",
-                         "defaut": "Défaut KPI8: Contact créé mais aucune provenance renseignée"},
-                defaut=f"Défaut KPI8: Contact créé mais aucune provenance renseignée",
+                         "nom_table_correspondante": "contacts",
+                         "defaut": defaut},
+                defaut=defaut,
                 date_releve=get_current_date(),
                 nom_table_correspondante="contacts",
+                est_corrige=False,
                 id_correspondant=safe_dict_get(contact, ["id"])
             )
-            dprint(f"#-- [{safe_dict_get(contact, ['id'])}] Défaut KPI8: Contact créé mais aucune provenance renseignée")
+            dprint(f"[{safe_dict_get(contact, ['id'])}] {defaut}", priority_level=4)
+        else:
+            safe_update_table_row(
+                table=Controle_qualite,
+                filters={"id_correspondant": safe_dict_get(contact, ["id"]),
+                         "nom_table_correspondante": "contacts",
+                         "defaut": defaut},
+                est_corrige=True,
+            )
 
-
+        defaut = "Defaut KPI8: Contact cree mais aucun detail sur sa provenance est renseigne"
         if not check["details_provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
                 filters={"id_correspondant": safe_dict_get(contact, ["id"]),
-                         "nom_table_correspondante": "candidates",
-                         "defaut": "Défaut KPI8: Contact créé mais aucun détail sur sa provenance est renseigné"},
-                defaut=f"Défaut KPI8: Contact créé mais aucun détail sur sa provenance est renseigné",
+                         "nom_table_correspondante": "contacts",
+                         "defaut": defaut},
+                defaut=defaut,
                 date_releve=get_current_date(),
                 nom_table_correspondante="contacts",
+                est_corrige=False,
                 id_correspondant=safe_dict_get(contact, ["id"])
             )
-            dprint(f"#-- [{safe_dict_get(contact, ['id'])}] Défaut KPI8: Contact créé mais aucun détail sur sa provenance est renseigné")
-
+            dprint(f"[{safe_dict_get(contact, ['id'])}] {defaut}", priority_level=4)
+        else:
+            safe_update_table_row(
+                table=Controle_qualite,
+                filters={"id_correspondant": safe_dict_get(contact, ["id"]),
+                         "nom_table_correspondante": "contacts",
+                         "defaut": defaut},
+                est_corrige=True,
+            )
 
     for contact in get_list_of_element("/contacts", startDate=start_date, endDate=end_date, period="updated"):
-        create_failure(contact)
+        _create_failure(contact)
 
-def controle_qualite_kpi8():
-    dates = get_period_dates()
 
-    # Point de contrôle 1:
+def controle_qualite_kpi8(start_date, end_date):
+    """
+    Controle qualite KPI8
+    :param start_date:
+    :param end_date:
+    :return:
+    """
+    dates = [start_date, end_date]
+
+    # Point de controle 1:
     """
     Reporting hebdo des clients sans provenance
     """
-    dprint(f"#- KPI8: contrôle qualité 1")
+    dprint(f"KPI8: controle qualite 1", priority_level=3, preprint="\n")
     controle_1(dates[0], dates[1])
-

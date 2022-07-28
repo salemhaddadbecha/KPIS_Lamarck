@@ -1,13 +1,33 @@
-# Modules / Dépendances
+# Modules / Dependances
 from tables import Ressources
-from modules.requests_tools import request, get_list_of_agencies, get_list_of_element
-from modules.safe_actions import safe_dict_get, safe_date_convert, dprint, safe_update_table_row, get_period_dates
+# Tools
+from tools.requests_tools import request, get_list_of_agencies, get_list_of_element
+from tools.safe_actions import safe_dict_get, safe_date_convert, dprint, safe_update_table_row
+
 
 def get_resource_all_informations(basic_data, list_of_agencies):
-    # Indexation d'éléments utiles:
+    """
+    Permet de recuperer toutes les informations utiles
+    d'une ressource a partir de ses informations basiques
+    :param basic_data:
+    :return: informations utiles de la ressource
+    """
+    # Indexation d'elements utiles:
     liste_sexe = ["homme", "femme"]
-    liste_profil_rm = ["manager", "dg", "directeur"]
-    liste_etats = ["out", "en mission", "en interne", "en arrêt", "signé"]
+    liste_profil_rm = [
+        "business",
+        "dg",
+        "directeur",
+        "drh",
+        "responsable",
+        "gérant",
+        "gerant",
+        "ressources humaines",
+        "recrutement"
+    ]
+    list_type = ["Consultant Interne", "Consultant Externe", "Comptabilité", "Business Manager", "Associé",
+                 "Recrutement / RH", "DRH", "DAF", "0", "non renseigné"]
+    liste_etats = ["out", "en mission", "en interne", "en arrêt", "signe", "non renseigne"]
     # Infos à trouver
     informations = {
         "boond_id": int(),
@@ -17,7 +37,9 @@ def get_resource_all_informations(basic_data, list_of_agencies):
         "prenom": str(),
         "sexe": str(),
         "agence": str(),
+        "etat": str(),
         "profil": str(),
+        "type": str(),
         "est_rm": bool(),
         "date_de_recrutement": None,
     }
@@ -30,11 +52,12 @@ def get_resource_all_informations(basic_data, list_of_agencies):
     informations["sexe"] = safe_dict_get(liste_sexe, [safe_dict_get(basic_data, ["attributes", "civility"])])
 
     if safe_dict_get(basic_data, ["relationships", "agency", "data", "id"]) is not None:
-        informations["agence"] = safe_dict_get(list_of_agencies, [int(safe_dict_get(basic_data, ["relationships", "agency", "data", "id"]))-1])
+        informations["agence"] = safe_dict_get(list_of_agencies, [
+            int(safe_dict_get(basic_data, ["relationships", "agency", "data", "id"])) - 1])
     else:
         informations["agence"] = None
 
-    if safe_dict_get(basic_data, ["attributes", "state"]):
+    if safe_dict_get(basic_data, ["attributes", "state"]) is not None:
         informations["etat"] = safe_dict_get(liste_etats, [int(safe_dict_get(basic_data, ["attributes", "state"]))])
     else:
         informations["etat"] = None
@@ -50,11 +73,14 @@ def get_resource_all_informations(basic_data, list_of_agencies):
     else:
         informations["est_rm"] = None
 
+    informations["type"] = safe_dict_get(list_type, [safe_dict_get(basic_data, ["attributes", "typeOf"])])
+
     # Pour avoir la date de recrutement, il faut faire une requête de plus
     administrative_informations = request(f"/resources/{informations['boond_id']}/administrative")
     debut_premier_contrat = None
     if safe_dict_get(administrative_informations, ["data", "relationships", "contracts", "data", -1, "id"]):
-        id_premier_contrat = safe_dict_get(administrative_informations, ["data", "relationships", "contracts", "data", -1, "id"])
+        id_premier_contrat = safe_dict_get(administrative_informations,
+                                           ["data", "relationships", "contracts", "data", -1, "id"])
         premier_contrat = request(f"/contracts/{id_premier_contrat}")
         debut_premier_contrat = safe_dict_get(premier_contrat, ["data", "attributes", "startDate"])
 
@@ -63,16 +89,22 @@ def get_resource_all_informations(basic_data, list_of_agencies):
     return informations
 
 
-def check_new_and_update_resources():
+def check_new_and_update_resources(start_date, end_date):
+    """
+    Met à jour et ajoute toutes les nouvelles ressources à la table Ressources:
+    :param start_date:
+    :param end_date:
+    :return:
+    """
     list_of_agencies = get_list_of_agencies()
-    dates = get_period_dates()
 
-    # Update resource -> type = updated
-    dprint(f"#- Update resource: period({dates[0]})")
-    list_of_resources_to_update = get_list_of_element("/resources", period="updated", startDate=dates[0], endDate=dates[1])
+    dprint(f"Update resource table", priority_level=3, preprint="\n")
+    list_of_resources_to_update = get_list_of_element("/resources", period="updated", startDate=start_date,
+                                                      endDate=end_date)
 
     for resource_to_update_basic_informations in list_of_resources_to_update:
-        resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations, list_of_agencies)
+        resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations,
+                                                                            list_of_agencies)
 
         safe_update_table_row(
             table=Ressources,
@@ -86,9 +118,10 @@ def check_new_and_update_resources():
             agence=resource_to_update_all_informations["agence"],
             etat=resource_to_update_all_informations["etat"],
             profil=resource_to_update_all_informations["profil"],
+            type=resource_to_update_all_informations["type"],
             est_rm=resource_to_update_all_informations["est_rm"],
             date_de_recrutement=resource_to_update_all_informations["date_de_recrutement"]
         )
-        dprint(f"#-- Update resource: {resource_to_update_all_informations['nom']} {resource_to_update_all_informations['prenom']}")
-
-    dprint("\n")
+        dprint(
+            f"Update resource: {resource_to_update_all_informations['nom']} {resource_to_update_all_informations['prenom']}",
+            priority_level=4)

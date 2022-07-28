@@ -15,7 +15,10 @@ class Candidats(Base):
     commentaire_provenance_cv = Column(String)
     recrute = Column(Boolean)
     prise_de_contact = Column(Boolean)
-    recontacte = Column(Boolean)
+    entretien_1 = Column(Boolean)
+    entretien_2 = Column(Boolean)
+    entretien_3 = Column(Boolean)
+    signature = Column(Boolean)
     # RelationShip(s)
     boond_rm_id = Column(Integer)
     boond_ressource_id = Column(Integer)
@@ -32,11 +35,11 @@ class Ressources(Base):
     agence = Column(String)
     etat = Column(String)
     profil = Column(String)
+    type = Column(String)
     est_rm = Column(Boolean)
     date_de_recrutement = Column(Date)
     # RelationShip(s)
     boond_rm_id = Column(Integer)
-
 
 class Besoins(Base):
     __tablename__ = 'besoins'
@@ -46,6 +49,7 @@ class Besoins(Base):
     date_de_creation = Column(Date)
     etat = Column(String)
     date_maj_drae = Column(Date)
+    est_interne = Column(Boolean)
     # RelationShip(s)
     boond_rm_id = Column(Integer)
     boond_contact_id = Column(Integer)
@@ -102,7 +106,7 @@ class Actions(Base):
 class Temps(Base):
     __tablename__ = 'temps'
     id = Column(Integer, primary_key=True)
-    boond_id = Column(Integer)
+    boond_id = Column(String)
     # Attributs
     date_de_creation = Column(Date)
     type = Column(String)
@@ -118,6 +122,7 @@ class Controle_qualite(Base):
     # Attributs
     defaut = Column(String)
     date_releve = Column(Date)
+    est_corrige = Column(Boolean)
     # RelationShip(s)
     nom_table_correspondante = Column(String)
     id_correspondant = Column(Integer)

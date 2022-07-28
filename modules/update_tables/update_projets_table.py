@@ -1,10 +1,17 @@
-# Modules / Dépendances
+# Modules / Dependances
 from tables import Projets
-from modules.requests_tools import get_list_of_element
-from modules.safe_actions import safe_dict_get, safe_date_convert, dprint, safe_update_table_row, get_period_dates
+# Tools
+from tools.requests_tools import get_list_of_element
+from tools.safe_actions import safe_dict_get, safe_date_convert, dprint, safe_update_table_row
+
 
 def get_projet_all_informations(basic_data):
-
+    """
+    Permet de recuperer toutes les informations utiles
+    d'un projet a partir de ses informations basiques
+    :param basic_data:
+    :return: informations utiles du projet
+    """
     # Infos à trouver
     informations = {
         "boond_id": int(),
@@ -21,12 +28,17 @@ def get_projet_all_informations(basic_data):
 
     return informations
 
-def check_new_and_update_projets():
-    dates = get_period_dates()
 
-    # Update projet -> type = updated
-    dprint(f"#- Update project: period({dates[0]})")
-    list_of_projets_to_update = get_list_of_element("/projects", period="updated", startDate=dates[0], endDate=dates[1])
+def check_new_and_update_projets(start_date, end_date):
+    """
+    Met à jour et ajoute tous les nouveaux projets à la table Projets:
+    :param start_date:
+    :param end_date:
+    :return:
+    """
+    dprint(f"Update project table", priority_level=3, preprint="\n")
+    list_of_projets_to_update = get_list_of_element("/projects", period="updated", startDate=start_date,
+                                                    endDate=end_date)
 
     for projet_to_update_basic_informations in list_of_projets_to_update:
         projet_to_update_all_informations = get_projet_all_informations(projet_to_update_basic_informations)
@@ -39,6 +51,4 @@ def check_new_and_update_projets():
             date_de_debut=projet_to_update_all_informations["date_de_debut"],
             date_de_fin=projet_to_update_all_informations["date_de_fin"]
         )
-        dprint(f"#-- Update project: {projet_to_update_all_informations['boond_id']}")
-
-    dprint("\n")
+        dprint(f"Update project: {projet_to_update_all_informations['boond_id']}", priority_level=4)
