@@ -89,18 +89,17 @@ def get_resource_all_informations(basic_data, list_of_agencies):
     return informations
 
 
-def check_new_and_update_resources(start_date, end_date):
+def check_new_and_update_resources(day):
     """
     Met à jour et ajoute toutes les nouvelles ressources à la table Ressources:
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
     list_of_agencies = get_list_of_agencies()
 
     dprint(f"Update resource table", priority_level=3, preprint="\n")
-    list_of_resources_to_update = get_list_of_element("/resources", period="updated", startDate=start_date,
-                                                      endDate=end_date)
+    list_of_resources_to_update = get_list_of_element("/resources", period="updated", startDate=day,
+                                                      endDate=day)
 
     for resource_to_update_basic_informations in list_of_resources_to_update:
         resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations,

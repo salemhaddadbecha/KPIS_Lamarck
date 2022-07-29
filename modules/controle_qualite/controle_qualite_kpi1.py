@@ -5,20 +5,20 @@ from datetime import datetime
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import request, get_list_of_element
-from tools.safe_actions import safe_dict_get, safe_date_convert, safe_update_table_row, dprint, get_current_date
+from tools.safe_actions import safe_dict_get, safe_date_convert, safe_update_table_row, dprint
 
 
-def controle_1(key, element, dates):
+def controle_1(key, element, day):
     """
     Point de controle 1: Extraction des personnes qui ont ete modifiees ou creees
     dans la semaine sans action saisie
     :param key:
     :param element:
-    :param dates:
+    :param day:
     :return:
     """
 
-    def _are_there_any_actions_created(endpoint, element, dates):
+    def _are_there_any_actions_created(endpoint, element, day):
         """
         Permet de savoit si des nouvelles actions ont été créées sur l'élément
         :param element:
@@ -31,13 +31,13 @@ def controle_1(key, element, dates):
 
         for action in safe_dict_get(actions, ["data"]):
             action_date_str = safe_dict_get(action, ["attributes", "creationDate"])
-            if datetime(1900, 1, 1) <= safe_date_convert(action_date_str) <= safe_date_convert(dates[1]):
+            if datetime(1900, 1, 1) <= safe_date_convert(action_date_str) <= safe_date_convert(day):
                 new_actions = True
                 break
 
         return new_actions
 
-    check = _are_there_any_actions_created(f"/{key}", element, dates)
+    check = _are_there_any_actions_created(f"/{key}", element, day)
 
     defaut = f"Defaut KPI1: {key} cree mais aucune action a ete saisie"
     if not check:
@@ -47,7 +47,7 @@ def controle_1(key, element, dates):
                      "nom_table_correspondante": key,
                      "defaut": defaut},
             defaut=defaut,
-            date_releve=get_current_date(),
+            date_releve=day,
             nom_table_correspondante=key,
             est_corrige=False,
             id_correspondant=safe_dict_get(element, ["id"])
@@ -63,12 +63,13 @@ def controle_1(key, element, dates):
         )
 
 
-def controle_2(key, element):
+def controle_2(key, element, day):
     """
     Point de controle 2: Extraire toutes les personnes qui ont ete modifiees
     dans la semaine avec un sourceur qui n’est plus dans le groupe Lamarck
     :param key:
     :param element:
+    :param day:
     :return:
     """
 
@@ -104,7 +105,7 @@ def controle_2(key, element):
                      "nom_table_correspondante": key,
                      "defaut": defaut},
             defaut=defaut,
-            date_releve=get_current_date(),
+            date_releve=day,
             nom_table_correspondante=key,
             est_corrige=False,
             id_correspondant=safe_dict_get(element, ["id"])
@@ -120,18 +121,15 @@ def controle_2(key, element):
         )
 
 
-def controle_qualite_kpi1(start_date, end_date):
+def controle_qualite_kpi1(day):
     """
     Controle qualite KPI1
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
-    dates = [start_date, end_date]
-
     people = {
-        "candidates": get_list_of_element("/candidates", period="updated", startDate=dates[0], endDate=dates[1]),
-        "resources": get_list_of_element("/resources", period="updated", startDate=dates[0], endDate=dates[1])
+        "candidates": get_list_of_element("/candidates", period="updated", startDate=day, endDate=day),
+        "resources": get_list_of_element("/resources", period="updated", startDate=day, endDate=day)
     }
 
     for key, value in people.items():
@@ -140,7 +138,7 @@ def controle_qualite_kpi1(start_date, end_date):
             # Point de controle 1: Extraction des personnes qui ont ete modifiees ou creees
             # dans la semaine sans action saisie
             dprint(f"KPI1: controle qualite 1", priority_level=3, preprint="\n")
-            controle_1(key, element, dates)
+            controle_1(key, element, day)
 
             # Point de controle 2: Extraire toutes les personnes qui ont ete modifiees
             # dans la semaine avec un sourceur qui n’est plus dans le groupe Lamarck

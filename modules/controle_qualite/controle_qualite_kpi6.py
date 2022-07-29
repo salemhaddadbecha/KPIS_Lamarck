@@ -2,7 +2,7 @@
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import get_list_of_element
-from tools.safe_actions import safe_dict_get, dprint, get_period_dates, get_current_date
+from tools.safe_actions import safe_dict_get, dprint, get_period_dates
 
 
 def controle_1(start_date, end_date):

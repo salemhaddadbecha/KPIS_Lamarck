@@ -162,7 +162,7 @@ def get_period_dates():
         return [yesterday.strftime('%Y-%m-%d'), yesterday.strftime('%Y-%m-%d')]
 
     elif APP_CONFIG.CRONJOB_EXECUTION == "test_period":
-        last_month = date - timedelta(weeks=2)
+        last_month = date - timedelta(weeks=300)
         return [last_month.strftime('%Y-%m-%d'), date.strftime('%Y-%m-%d')]
 
     return [date.strftime('%Y-%m-%d'), date.strftime('%Y-%m-%d')]

@@ -2,21 +2,29 @@
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import get_list_of_element
-from tools.safe_actions import safe_dict_get, safe_date_convert, safe_update_table_row, get_current_date, dprint
+from tools.safe_actions import safe_dict_get, safe_date_convert, safe_update_table_row, dprint
 
 
-def controle_1(start_date, end_date):
-    def _create_failure(resource):
+def controle_1(day):
+    """
+    Verifie que l etat des ressources est bien a jour
+    :param day:
+    :return:
+    """
+
+    def _create_failure(resource, day):
         """
         Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
         :param resource:
+        :param day:
         :return:
         """
 
-        def _get_last_prestation(resource):
+        def _get_last_prestation(resource, day):
             """
             Permet de recuperer la derniere prestation d une ressource
             :param resource:
+            :param day:
             :return: informations sur la derniere prestation d une ressource
             """
             prestations = get_list_of_element(f"/resources/{resource['id']}/deliveries-inactivities")
@@ -43,11 +51,11 @@ def controle_1(start_date, end_date):
 
             if last_prestation_lite["debut"] is not False and \
                     last_prestation_lite["fin"] is not False and \
-                    last_prestation_lite["debut"] <= get_current_date() <= last_prestation_lite["fin"]:
+                    last_prestation_lite["debut"] <= day <= last_prestation_lite["fin"]:
                 last_prestation_lite["en_cours"] = True
             return last_prestation_lite
 
-        last_prestation = _get_last_prestation(resource)
+        last_prestation = _get_last_prestation(resource, day)
 
         defaut = f"Defaut KPI12: Le dernier contrat de " \
                  f"{safe_dict_get(resource, ['attributes', 'lastName'])} " \
@@ -61,7 +69,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -88,7 +96,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -114,7 +122,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -140,7 +148,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -166,7 +174,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -181,21 +189,19 @@ def controle_1(start_date, end_date):
                 est_corrige=True,
             )
 
-    for resource in get_list_of_element("/resources", startDate=start_date, endDate=end_date, period="updated"):
-        _create_failure(resource)
+    for resource in get_list_of_element("/resources", startDate=day, endDate=day, period="updated"):
+        _create_failure(resource, day)
 
 
-def controle_qualite_kpi12(start_date, end_date):
+def controle_qualite_kpi12(day):
     """
     Controle qualite KPI12
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
-    dates = [start_date, end_date]
     # Point de controle 1:
     """
     Mise à jour de l’etat de la Ressource sur Boond
     """
     dprint(f"KPI12: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(dates[0], dates[1])
+    controle_1(day)

@@ -43,17 +43,16 @@ def get_temps_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_temps(start_date, end_date):
+def check_new_and_update_temps(day):
     """
     Met à jour et ajoute tous les nouveaux temps à la table Temps:
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
     dprint(f"Update temps table", priority_level=3, preprint="\n")
 
     list_of_new_temps = get_list_of_element("/reporting-resources", extractType="inDays", period="onePeriod",
-                                            maxResources=10, startDate=start_date, endDate=end_date)
+                                            maxResources=10, startDate=day, endDate=day)
     for temps in list_of_new_temps:
 
         if safe_dict_get(temps, ["attributes", "value"]) is not None and \

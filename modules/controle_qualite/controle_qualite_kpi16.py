@@ -2,15 +2,22 @@
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import get_list_of_element
-from tools.safe_actions import safe_dict_get, safe_update_table_row, get_current_date, \
-    dprint, is_in_the_list
+from tools.safe_actions import safe_dict_get, safe_update_table_row, dprint, is_in_the_list
 
 
-def controle_1(start_date, end_date):
-    def _create_failure(projet):
+def controle_1(day):
+    """
+    -   Tous les projets qui n’ont pas d’action d’un des 3 types
+    -   Tous les projets qui ont plusieurs actions d’un des 3 types
+    :param day:
+    :return:
+    """
+
+    def _create_failure(projet, day):
         """
         Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
         :param projet:
+        :param day:
         :return:
         """
 
@@ -58,7 +65,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "projets",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="projets",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(projet, ["id"])
@@ -81,7 +88,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "projets",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="projets",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(projet, ["id"])
@@ -96,18 +103,16 @@ def controle_1(start_date, end_date):
                 est_corrige=True,
             )
 
-    for projet in get_list_of_element("/projects", startDate=start_date, endDate=end_date):
-        _create_failure(projet)
+    for projet in get_list_of_element("/projects", startDate=day, endDate=day):
+        _create_failure(projet, day)
 
 
-def controle_qualite_kpi16(start_date, end_date):
+def controle_qualite_kpi16(day):
     """
     Controle qualite KPI16
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
-    dates = [start_date, end_date]
 
     # Point de controle 1:
     """
@@ -115,4 +120,4 @@ def controle_qualite_kpi16(start_date, end_date):
     -   Tous les projets qui ont plusieurs actions d’un des 3 types
     """
     dprint(f"KPI16: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(dates[0], dates[1])
+    controle_1(day)

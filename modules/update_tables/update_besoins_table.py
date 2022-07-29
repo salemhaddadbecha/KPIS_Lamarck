@@ -46,7 +46,7 @@ def get_besoin_all_informations(basic_data):
     # Vérification des refacturations: si contient refacturation ET un noms de l'une des agences
     titre = safe_date_convert(safe_dict_get(basic_data, ["attributes", "title"]))
     informations["est_interne"] = False
-    if "refacturation" in titre.lower():
+    if titre is not None and "refacturation" in titre.lower():
         for agence in get_list_of_agencies():
             if agence.lower() in titre.lower():
                 informations["est_interne"] = True
@@ -54,16 +54,15 @@ def get_besoin_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_besoins(start_date, end_date):
+def check_new_and_update_besoins(day):
     """
     Met à jour et ajoute tous les nouveaux besoins à la table Besoins:
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
     dprint(f"Update besoin table", priority_level=3, preprint="\n")
-    list_of_besoins_to_update = get_list_of_element("/opportunities", period="updated", startDate=start_date,
-                                                    endDate=end_date)
+    list_of_besoins_to_update = get_list_of_element("/opportunities", period="updated", startDate=day,
+                                                    endDate=day)
 
     for besoin_to_update_basic_informations in list_of_besoins_to_update:
         besoin_to_update_all_informations = get_besoin_all_informations(besoin_to_update_basic_informations)

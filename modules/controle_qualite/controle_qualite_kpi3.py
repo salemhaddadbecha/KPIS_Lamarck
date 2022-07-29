@@ -2,22 +2,22 @@
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import request, get_list_of_element
-from tools.safe_actions import safe_dict_get, safe_update_table_row, dprint, get_current_date
+from tools.safe_actions import safe_dict_get, safe_update_table_row, dprint
 
 
-def controle_1(start_date, end_date):
+def controle_1(day):
     """
     Existence pour tous les consultants d’au
     moins une ligne dans le bloc Ressources > Administratif > Contrat RH
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
 
-    def _create_failure(resource):
+    def _create_failure(resource, day):
         """
         Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
         :param resource:
+        :param day:
         :return:
         """
 
@@ -44,7 +44,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -59,23 +59,23 @@ def controle_1(start_date, end_date):
                 est_corrige=True,
             )
 
-    for resource in get_list_of_element("/resources", startDate=start_date, endDate=end_date, period="updated"):
-        _create_failure(resource)
+    for resource in get_list_of_element("/resources", startDate=day, endDate=day, period="updated"):
+        _create_failure(resource, day)
 
 
-def controle_2(start_date, end_date):
+def controle_2(day):
     """
     Mettre à jour l’ensemble des titres de profils Ressources pour standardiser
     les titres avec le profil du consultant
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
 
-    def _create_failure(resource):
+    def _create_failure(resource, day):
         """
         Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
         :param resource:
+        :param day:
         :return:
         """
         liste_titre_autorise = [
@@ -110,7 +110,7 @@ def controle_2(start_date, end_date):
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="ressources",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
@@ -125,18 +125,16 @@ def controle_2(start_date, end_date):
                 est_corrige=True,
             )
 
-    for resource in get_list_of_element("/resources", startDate=start_date, endDate=end_date, period="updated"):
-        _create_failure(resource)
+    for resource in get_list_of_element("/resources", startDate=day, endDate=day, period="updated"):
+        _create_failure(resource, day)
 
 
-def controle_qualite_kpi3(start_date, end_date):
+def controle_qualite_kpi3(day):
     """
     Controle qualite KPI3
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
-    dates = [start_date, end_date]
 
     # Point de controle 1:
     """
@@ -144,7 +142,7 @@ def controle_qualite_kpi3(start_date, end_date):
     moins une ligne dans le bloc Ressources > Administratif > Contrat RH
     """
     dprint(f"KPI3: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(dates[0], dates[1])
+    controle_1(day)
 
     # Point de controle 2:
     """
@@ -152,4 +150,4 @@ def controle_qualite_kpi3(start_date, end_date):
     les titres avec le profil du consultant
     """
     dprint(f"KPI3: controle qualite 2", priority_level=3, preprint="\n")
-    controle_2(dates[0], dates[1])
+    controle_2(day)

@@ -44,66 +44,66 @@ for day in datespan(start_date=safe_date_convert(dates[0]), end_date=safe_date_c
     # 8 tables + 6 controles qualites = 14 fonctions en paralleles
     if APP_CONFIG.MULTI_THREADING == "no":
         # Update table
-        check_new_and_update_candidates(day, day)
-        check_new_and_update_resources(day, day)
-        check_new_and_update_besoins(day, day)
-        check_new_and_update_projets(day, day)
-        check_new_and_update_temps(day, day)
-        check_new_and_update_prestations(day, day)
-        check_new_and_update_contacts(day, day)
-        check_new_and_update_actions(day, day)
+        check_new_and_update_candidates(day)
+        check_new_and_update_resources(day)
+        check_new_and_update_besoins(day)
+        check_new_and_update_projets(day)
+        check_new_and_update_temps(day)
+        check_new_and_update_prestations(day)
+        check_new_and_update_contacts(day)
+        check_new_and_update_actions(day)
 
         dprint("\n", hashtag_display=False)
 
         # Controle qualite
-        controle_qualite_kpi1(day, day)
-        controle_qualite_kpi2(day, day)
-        controle_qualite_kpi3(day, day)
-        # controle_qualite_kpi6(day, day) rien à faire -> concerne l'operationnel
-        controle_qualite_kpi8(day, day)
-        controle_qualite_kpi12(day, day)
-        controle_qualite_kpi16(day, day)
+        controle_qualite_kpi1(day)
+        controle_qualite_kpi2(day)
+        controle_qualite_kpi3(day)
+        # controle_qualite_kpi6(day) rien à faire -> concerne l'operationnel
+        controle_qualite_kpi8(day)
+        controle_qualite_kpi12(day)
+        controle_qualite_kpi16(day)
 
         dprint("\n", hashtag_display=False)
 
     elif APP_CONFIG.MULTI_THREADING == "soft":
         with ThreadPoolExecutor(14) as executor:
             # Update table
-            executor.submit(check_new_and_update_candidates, day, day)
-            executor.submit(check_new_and_update_resources, day, day)
-            executor.submit(check_new_and_update_besoins, day, day)
-            executor.submit(check_new_and_update_projets, day, day)
-            executor.submit(check_new_and_update_temps, day, day)
-            executor.submit(check_new_and_update_prestations, day, day)
-            executor.submit(check_new_and_update_contacts, day, day)
-            executor.submit(check_new_and_update_actions, day, day)
+            executor.submit(check_new_and_update_candidates, day)
+            executor.submit(check_new_and_update_resources, day)
+            executor.submit(check_new_and_update_besoins, day)
+            executor.submit(check_new_and_update_projets, day)
+            executor.submit(check_new_and_update_temps, day)
+            executor.submit(check_new_and_update_prestations, day)
+            executor.submit(check_new_and_update_contacts, day)
+            executor.submit(check_new_and_update_actions, day)
 
             # Controle qualite
-            executor.submit(controle_qualite_kpi1, day, day)
-            executor.submit(controle_qualite_kpi2, day, day)
-            executor.submit(controle_qualite_kpi3, day, day)
-            executor.submit(controle_qualite_kpi8, day, day)
-            executor.submit(controle_qualite_kpi12, day, day)
-            executor.submit(controle_qualite_kpi16, day, day)
+            executor.submit(controle_qualite_kpi1, day)
+            executor.submit(controle_qualite_kpi2, day)
+            executor.submit(controle_qualite_kpi3, day)
+            executor.submit(controle_qualite_kpi8, day)
+            executor.submit(controle_qualite_kpi12, day)
+            executor.submit(controle_qualite_kpi16, day)
 
     elif APP_CONFIG.MULTI_THREADING == "hard":
         # Update table
-        Thread(target=check_new_and_update_candidates, args=(day, day)).start()
-        Thread(target=check_new_and_update_resources, args=(day, day)).start()
-        Thread(target=check_new_and_update_besoins, args=(day, day)).start()
-        Thread(target=check_new_and_update_projets, args=(day, day)).start()
-        Thread(target=check_new_and_update_temps, args=(day, day)).start()
-        Thread(target=check_new_and_update_prestations, args=(day, day)).start()
-        Thread(target=check_new_and_update_contacts, args=(day, day)).start()
-        Thread(target=check_new_and_update_actions, args=(day, day)).start()
+        Thread(target=check_new_and_update_candidates, args=day).start()
+        Thread(target=check_new_and_update_resources, args=day).start()
+        Thread(target=check_new_and_update_besoins, args=day).start()
+        Thread(target=check_new_and_update_projets, args=day).start()
+        Thread(target=check_new_and_update_temps, args=day).start()
+        Thread(target=check_new_and_update_prestations, args=day).start()
+        Thread(target=check_new_and_update_contacts, args=day).start()
+        Thread(target=check_new_and_update_actions, args=day).start()
 
         # Controle qualite
-        Thread(target=controle_qualite_kpi1, args=(day, day)).start()
-        Thread(target=controle_qualite_kpi2, args=(day, day)).start()
-        Thread(target=controle_qualite_kpi3, args=(day, day)).start()
-        Thread(target=controle_qualite_kpi8, args=(day, day)).start()
-        Thread(target=controle_qualite_kpi12, args=(day, day)).start()
-        Thread(target=controle_qualite_kpi16, args=(day, day)).start()
+        Thread(target=controle_qualite_kpi1, args=day).start()
+        Thread(target=controle_qualite_kpi2, args=day).start()
+        Thread(target=controle_qualite_kpi3, args=day).start()
+        Thread(target=controle_qualite_kpi8, args=day).start()
+        Thread(target=controle_qualite_kpi12, args=day).start()
+        Thread(target=controle_qualite_kpi16, args=day).start()
 
         sleep(60)
 

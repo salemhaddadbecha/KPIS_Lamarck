@@ -62,18 +62,17 @@ def get_action_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_actions_with_param(start_date, end_date, filter):
+def check_new_and_update_actions_with_param(day, filter):
     """
     Permet d'ajouter à la table Actions les nouvelles actions ou de les mettre a jour
-    :param start_date:
-    :param end_date:
+    :param day:
     :param filter:
     :return:
     """
     # Update action -> type = updated
     dprint(f"Update action type {filter}", priority_level=4)
     list_of_actions_to_update = get_list_of_element("/actions", period="updated", actionTypes=filter,
-                                                    startDate=start_date, endDate=end_date)
+                                                    startDate=day, endDate=day)
 
     for action_to_update_basic_informations in list_of_actions_to_update:
         action_to_update_all_informations = get_action_all_informations(action_to_update_basic_informations)
@@ -90,21 +89,20 @@ def check_new_and_update_actions_with_param(start_date, end_date, filter):
         dprint(f"Update action: {action_to_update_all_informations['boond_id']}", priority_level=5)
 
 
-def check_new_and_update_actions(start_date, end_date):
+def check_new_and_update_actions(day):
     """
     Met à jour et ajoute toutes les nouvelles actions de type:
         - proposition sur profil
         - proposition sur mission
         - prospection
         - soutenance
-    :param start_date:
-    :param end_date:
+    :param day:
     :param filter:
     :return:
     """
     dprint(f"Update action table", priority_level=3, preprint="\n")
     # Actions qui nous interesse : proposition sur profil(candidat, 43) / proposition sur mission(candidat, 130) / prospection(contacts, 61) / soutenance(contacts, 10)
-    check_new_and_update_actions_with_param(start_date, end_date, 43)
-    check_new_and_update_actions_with_param(start_date, end_date, 130)
-    check_new_and_update_actions_with_param(start_date, end_date, 61)
-    check_new_and_update_actions_with_param(start_date, end_date, 10)
+    check_new_and_update_actions_with_param(day, 43)
+    check_new_and_update_actions_with_param(day, 130)
+    check_new_and_update_actions_with_param(day, 61)
+    check_new_and_update_actions_with_param(day, 10)

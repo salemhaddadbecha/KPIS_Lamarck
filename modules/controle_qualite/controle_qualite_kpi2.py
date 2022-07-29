@@ -5,17 +5,15 @@ from datetime import timedelta
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import get_list_of_element, get_list_of_agencies, request
-from tools.safe_actions import dprint, safe_dict_get, is_in_the_list, safe_update_table_row, get_current_date, \
-    safe_date_convert
+from tools.safe_actions import dprint, safe_dict_get, is_in_the_list, safe_update_table_row, safe_date_convert
 
 
-def controle_1(start_date, end_date):
+def controle_1(day):
     """
     -	Rapport hebdo sur les consultants en statut Recrute(e) :
         o	Sans provenance
         o	Ou sans commentaire
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
 
@@ -58,7 +56,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="candidates",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
@@ -81,7 +79,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="candidates",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
@@ -97,17 +95,16 @@ def controle_1(start_date, end_date):
             )
 
     # candidateStates=3 -> que en statut recruté
-    for candidat in get_list_of_element("/candidates", candidateStates=3, startDate=start_date, endDate=end_date,
+    for candidat in get_list_of_element("/candidates", candidateStates=3, startDate=day, endDate=day,
                                         period="updated"):
         _create_failure(candidat)
 
 
-def controle_2(start_date, end_date):
+def controle_2(day):
     """
     Rapport hebdo sur les consultants qui sont dans la partie Ressources
     mais qui n’ont pas le statut recrute ou base d’import (ou cleanage du stock)
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
 
@@ -132,7 +129,7 @@ def controle_2(start_date, end_date):
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="candidates",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
@@ -148,17 +145,16 @@ def controle_2(start_date, end_date):
             )
 
     # On reprend tous les candidats sur les 4 derniers mois: durée moyenne de recrutement
-    for candidat in get_list_of_element("/candidates", startDate=safe_date_convert(start_date) - timedelta(weeks=4 * 4),
-                                        endDate=end_date, period="updated"):
+    for candidat in get_list_of_element("/candidates", startDate=safe_date_convert(day) - timedelta(weeks=4 * 4),
+                                        endDate=day, period="updated"):
         create_failure(candidat)
 
 
-def controle_3(start_date, end_date, agencies):
+def controle_3(day, agencies):
     """
     Rapport hebdo sur les candidats ayant
     comme agence « Lamarck Group » en fonction du type de poste
-    :param start_date:
-    :param end_date:
+    :param day:
     :param agencies:
     :return:
     """
@@ -202,7 +198,7 @@ def controle_3(start_date, end_date, agencies):
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="candidates",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
@@ -217,18 +213,16 @@ def controle_3(start_date, end_date, agencies):
                 est_corrige=True,
             )
 
-    for candidat in get_list_of_element("/candidates", startDate=start_date, endDate=end_date, period="updated"):
+    for candidat in get_list_of_element("/candidates", startDate=day, endDate=day, period="updated"):
         create_failure(candidat, agencies)
 
 
-def controle_qualite_kpi2(start_date, end_date):
+def controle_qualite_kpi2(day):
     """
     Controle qualite KPI2
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
-    dates = [start_date, end_date]
 
     # Point de controle 1:
     """
@@ -237,7 +231,7 @@ def controle_qualite_kpi2(start_date, end_date):
         o	Ou sans commentaire
     """
     dprint(f"KPI2: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(dates[0], dates[1])
+    controle_1(day)
 
     # Point de controle 2:
     """
@@ -245,7 +239,7 @@ def controle_qualite_kpi2(start_date, end_date):
     mais qui n’ont pas le statut recrute ou base d’import (ou cleanage du stock)
     """
     dprint(f"KPI2: controle qualite 2", priority_level=3, preprint="\n")
-    controle_2(dates[0], dates[1])
+    controle_2(day)
 
     # Point de controle 3
     """
@@ -254,4 +248,4 @@ def controle_qualite_kpi2(start_date, end_date):
     """
     dprint(f"KPI2: controle qualite 3", priority_level=3, preprint="\n")
     agencies = get_list_of_agencies()
-    controle_3(dates[0], dates[1], agencies)
+    controle_3(day, agencies)

@@ -112,16 +112,15 @@ def get_candidate_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_candidates(start_date, end_date):
+def check_new_and_update_candidates(day):
     """
     Met à jour et ajoute tous les nouveaux candidats à la table Candidats:
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
     dprint(f"Update candidates table", priority_level=3, preprint="\n")
-    list_of_candidates_to_update = get_list_of_element("/candidates", period="updated", startDate=start_date,
-                                                       endDate=end_date)
+    list_of_candidates_to_update = get_list_of_element("/candidates", period="updated", startDate=day,
+                                                       endDate=day)
 
     for candidate_to_update_basic_informations in list_of_candidates_to_update:
         candidate_to_update_all_informations = get_candidate_all_informations(candidate_to_update_basic_informations)

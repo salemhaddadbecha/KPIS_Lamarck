@@ -2,21 +2,21 @@
 from tables import Controle_qualite
 # Tools
 from tools.requests_tools import request, get_list_of_element
-from tools.safe_actions import safe_dict_get, is_in_the_list, safe_update_table_row, get_current_date, dprint
+from tools.safe_actions import safe_dict_get, is_in_the_list, safe_update_table_row, dprint
 
 
-def controle_1(start_date, end_date):
+def controle_1(day):
     """
     Recupere les clients sans provenance
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
 
-    def _create_failure(contact):
+    def _create_failure(contact, day):
         """
         Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
         :param contact:
+        :param day:
         :return:
         """
 
@@ -53,7 +53,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "contacts",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="contacts",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(contact, ["id"])
@@ -76,7 +76,7 @@ def controle_1(start_date, end_date):
                          "nom_table_correspondante": "contacts",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=get_current_date(),
+                date_releve=day,
                 nom_table_correspondante="contacts",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(contact, ["id"])
@@ -91,22 +91,20 @@ def controle_1(start_date, end_date):
                 est_corrige=True,
             )
 
-    for contact in get_list_of_element("/contacts", startDate=start_date, endDate=end_date, period="updated"):
-        _create_failure(contact)
+    for contact in get_list_of_element("/contacts", startDate=day, endDate=day, period="updated"):
+        _create_failure(contact, day)
 
 
-def controle_qualite_kpi8(start_date, end_date):
+def controle_qualite_kpi8(day):
     """
     Controle qualite KPI8
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
-    dates = [start_date, end_date]
 
     # Point de controle 1:
     """
     Reporting hebdo des clients sans provenance
     """
     dprint(f"KPI8: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(dates[0], dates[1])
+    controle_1(day)

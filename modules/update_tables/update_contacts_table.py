@@ -21,8 +21,8 @@ def get_contact_all_informations(basic_data):
         "Appel d'offre",
         "Appel entrant",
         "Salon",
-        "Recommandation client"
-        "non renseigne",
+        "Recommandation client",
+        "non renseigne"
     ]  # index-1 pour avoir la valeur correspondante / dernier index reserve au non renseigne auquel l'index est de -1
 
     informations = {
@@ -51,16 +51,15 @@ def get_contact_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_contacts(start_date, end_date):
+def check_new_and_update_contacts(day):
     """
     Met à jour et ajoute tous les nouveaux contacts à la table Contacts:
-    :param start_date:
-    :param end_date:
+    :param day:
     :return:
     """
     dprint(f"Update contact table", priority_level=3, preprint="\n")
-    list_of_contacts_to_update = get_list_of_element("/contacts", period="updated", startDate=start_date,
-                                                     endDate=end_date)
+    list_of_contacts_to_update = get_list_of_element("/contacts", period="updated", startDate=day,
+                                                     endDate=day)
     for contact_to_update_basic_informations in list_of_contacts_to_update:
         contact_to_update_all_informations = get_contact_all_informations(contact_to_update_basic_informations)
 
