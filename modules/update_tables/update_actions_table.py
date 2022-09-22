@@ -70,7 +70,7 @@ def check_new_and_update_actions_with_param(day, filter):
     :return:
     """
     # Update action -> type = updated
-    dprint(f"Update action type {filter}", priority_level=4)
+    dprint("Update action type {}".format(filter), priority_level=4)
     list_of_actions_to_update = get_list_of_element("/actions", period="updated", actionTypes=filter,
                                                     startDate=day, endDate=day)
 
@@ -86,7 +86,7 @@ def check_new_and_update_actions_with_param(day, filter):
             type=action_to_update_all_informations["type"],
             boond_id_element_associe=action_to_update_all_informations["boond_id_element_associe"]
         )
-        dprint(f"Update action: {action_to_update_all_informations['boond_id']}", priority_level=5)
+        dprint("Update action: {}".format(action_to_update_all_informations['boond_id']), priority_level=5)
 
 
 def check_new_and_update_actions(day):
@@ -100,7 +100,7 @@ def check_new_and_update_actions(day):
     :param filter:
     :return:
     """
-    dprint(f"Update action table", priority_level=3, preprint="\n")
+    dprint("Update action table", priority_level=3, preprint="\n")
     # Actions qui nous interesse : proposition sur profil(candidat, 43) / proposition sur mission(candidat, 130) / prospection(contacts, 61) / soutenance(contacts, 10)
     check_new_and_update_actions_with_param(day, 43)
     check_new_and_update_actions_with_param(day, 130)

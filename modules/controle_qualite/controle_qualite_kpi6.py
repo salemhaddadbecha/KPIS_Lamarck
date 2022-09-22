@@ -23,6 +23,6 @@ def controle_qualite_kpi6(start_date, end_date):
     """
     # Comment trouver la soutenance ? idee: on regarder tous les
     # positionnemnts puis toutes les actions de la resources et on compare -> jamais de soutenance dans actions pq ?
-    dprint(f"#- KPI6: controle qualite 1")
+    dprint("#- KPI6: controle qualite 1")
     controle_1(dates[0], dates[1])
 

@@ -61,7 +61,9 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
             )
-            dprint(f"[{safe_dict_get(candidat, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(
+                safe_dict_get(candidat, ['id']), defaut
+            ), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -84,7 +86,9 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
             )
-            dprint(f"[{safe_dict_get(candidat, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(
+                safe_dict_get(candidat, ['id']), defaut
+            ), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -116,7 +120,7 @@ def controle_2(day):
         """
 
         def get_associated_ressource(candidat):
-            information = request(f"/candidates/{safe_dict_get(candidat, ['id'])}")
+            information = request("/candidates/{}".format(safe_dict_get(candidat, ['id'])))
             return safe_dict_get(information, ["relationships", "resource", "data"])
 
         ressource = get_associated_ressource(candidat)
@@ -134,7 +138,9 @@ def controle_2(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
             )
-            dprint(f"[{safe_dict_get(candidat, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(
+                safe_dict_get(candidat, ['id']),defaut
+            ), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -180,7 +186,7 @@ def controle_3(day, agencies):
             candidat_id = safe_dict_get(candidat, ["id"])
 
             if candidat_id is not None:
-                candidat_informations = request(f"/candidates/{candidat_id}/information")
+                candidat_informations = request("/candidates/{}/information".format(candidat_id))
 
             if safe_dict_get(candidat_informations, ["attributes", "state"]) is not None:
                 candidat_agency = safe_dict_get(agencies,
@@ -203,7 +209,9 @@ def controle_3(day, agencies):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
             )
-            dprint(f"[{safe_dict_get(candidat, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(
+                safe_dict_get(candidat, ['id']), defaut
+            ), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -230,7 +238,7 @@ def controle_qualite_kpi2(day):
         o	Sans provenance
         o	Ou sans commentaire
     """
-    dprint(f"KPI2: controle qualite 1", priority_level=3, preprint="\n")
+    dprint("KPI2: controle qualite 1", priority_level=3, preprint="\n")
     controle_1(day)
 
     # Point de controle 2:
@@ -238,7 +246,7 @@ def controle_qualite_kpi2(day):
     Rapport hebdo sur les consultants qui sont dans la partie Ressources 
     mais qui n’ont pas le statut recrute ou base d’import (ou cleanage du stock)
     """
-    dprint(f"KPI2: controle qualite 2", priority_level=3, preprint="\n")
+    dprint("KPI2: controle qualite 2", priority_level=3, preprint="\n")
     controle_2(day)
 
     # Point de controle 3
@@ -246,6 +254,6 @@ def controle_qualite_kpi2(day):
     Rapport hebdo sur les candidats ayant 
     comme agence « Lamarck Group » en fonction du type de poste
     """
-    dprint(f"KPI2: controle qualite 3", priority_level=3, preprint="\n")
+    dprint("KPI2: controle qualite 3", priority_level=3, preprint="\n")
     agencies = get_list_of_agencies()
     controle_3(day, agencies)

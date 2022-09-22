@@ -27,7 +27,7 @@ def controle_1(day):
             :param day:
             :return: informations sur la derniere prestation d une ressource
             """
-            prestations = get_list_of_element(f"/resources/{resource['id']}/deliveries-inactivities")
+            prestations = get_list_of_element("/resources/{}/deliveries-inactivities".format(resource['id']))
             last_prestation = safe_dict_get(prestations, [0])
             last_prestation_lite = {
                 "etat": None,
@@ -57,10 +57,10 @@ def controle_1(day):
 
         last_prestation = _get_last_prestation(resource, day)
 
-        defaut = f"Defaut KPI12: Le dernier contrat de " \
-                 f"{safe_dict_get(resource, ['attributes', 'lastName'])} " \
-                 f"{safe_dict_get(resource, ['attributes', 'firstName'])}" \
-                 f" n'a pas de date de debut"
+        defaut = "Defaut KPI12: Le dernier contrat de {} {} n'a pas de date de debut".format(
+            safe_dict_get(resource, ['attributes', 'lastName']),
+            safe_dict_get(resource, ['attributes', 'firstName'])
+        )
 
         if not last_prestation["debut"]:
             safe_update_table_row(
@@ -74,7 +74,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -84,10 +84,10 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = f"Defaut KPI12: Le dernier contrat de " \
-                 f"{safe_dict_get(resource, ['attributes', 'lastName'])} " \
-                 f"{safe_dict_get(resource, ['attributes', 'firstName'])}" \
-                 f" n'a pas de date de fin"
+        defaut = "Defaut KPI12: Le dernier contrat de {} {} n'a pas de date de fin".format(
+            safe_dict_get(resource, ['attributes', 'lastName']),
+            safe_dict_get(resource, ['attributes', 'firstName'])
+        )
 
         if not last_prestation["fin"]:
             safe_update_table_row(
@@ -101,7 +101,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -111,10 +111,10 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = f"Defaut KPI12: " \
-                 f"{safe_dict_get(resource, ['attributes', 'lastName'])} " \
-                 f"{safe_dict_get(resource, ['attributes', 'firstName'])}" \
-                 f" n'a pas d'etat de renseigne (en mission, en interne, etc)"
+        defaut = "Defaut KPI12: {} {} n'a pas d'etat de renseigne (en mission, en interne, etc)".format(
+            safe_dict_get(resource, ['attributes', 'lastName']),
+            safe_dict_get(resource, ['attributes', 'firstName'])
+        )
         if last_prestation["etat"] is None:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -127,7 +127,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -137,10 +137,10 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = f"Defaut KPI12: " \
-                 f"{safe_dict_get(resource, ['attributes', 'lastName'])} " \
-                 f"{safe_dict_get(resource, ['attributes', 'firstName'])}" \
-                 f" etat 'en mission' alors qu'aucune mission est en cours"
+        defaut = "Defaut KPI12: {} {} etat 'en mission' alors qu'aucune mission est en cours".format(
+            safe_dict_get(resource, ['attributes', 'lastName']),
+            safe_dict_get(resource, ['attributes', 'firstName'])
+        )
         if last_prestation["etat"] == "en mission" and last_prestation["en_cours"] == False:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -153,7 +153,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -163,10 +163,10 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = f"Defaut KPI12: " \
-                 f"{safe_dict_get(resource, ['attributes', 'lastName'])} " \
-                 f"{safe_dict_get(resource, ['attributes', 'firstName'])}" \
-                 f" etat 'en interne' alors qu'une mission est en cours"
+        defaut = "Defaut KPI12: {} {} etat 'en interne' alors qu'une mission est en cours".format(
+            safe_dict_get(resource, ['attributes', 'lastName']),
+            safe_dict_get(resource, ['attributes', 'firstName'])
+        )
         if last_prestation["etat"] == "en interne" and last_prestation["en_cours"] == True:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -179,7 +179,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -203,5 +203,5 @@ def controle_qualite_kpi12(day):
     """
     Mise à jour de l’etat de la Ressource sur Boond
     """
-    dprint(f"KPI12: controle qualite 1", priority_level=3, preprint="\n")
+    dprint("KPI12: controle qualite 1", priority_level=3, preprint="\n")
     controle_1(day)

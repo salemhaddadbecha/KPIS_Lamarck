@@ -25,7 +25,7 @@ def request(endpoint, **query_params):
         param += "?"
         for key, value in query_params.items():
             param += ("&" + key + "=" + str(value))
-    dprint(f"Endpoint requested: {param}", priority_level=4)
+    dprint("Endpoint requested: {}".format(param), priority_level=4)
 
     response = None
     while True:
@@ -37,7 +37,7 @@ def request(endpoint, **query_params):
                 response = json.loads(response.text)
                 break
             else:
-                print(f"ERROR, Code erreur de la requete: {response}")
+                print("ERROR, Code erreur de la requete: {}".format(response))
         except:
             sleep(5)
             response = requests.get(APP_CONFIG.BOONDMANAGER_API_URL + param,
@@ -77,7 +77,7 @@ def get_list_of_element(endpoint, **params):
         params["page"] = page
         elements = request(endpoint, **params)
 
-        dprint(f"Page number: {page}", priority_level=5)
+        dprint("Page number: {}".format(page), priority_level=5)
         if elements and len(safe_dict_get(elements, ["data"])) > 0:
             list_of_elements += safe_dict_get(elements, ["data"])
             page += 1

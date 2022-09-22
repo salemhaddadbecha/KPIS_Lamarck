@@ -35,11 +35,11 @@ def datespan(start_date, end_date, delta):
 
 dates = get_period_dates()
 
-dprint(f"Run KPIs database script, for the period: from {dates[0]} to {dates[1]}", priority_level=1)
+dprint("Run KPIs database script, for the period: from {} to {}".format(dates[0], dates[1]), priority_level=1)
 # On itere les jours presents dans la plage de temps (periode) pour avoir un element de temps par jour et par personne
 for day in datespan(start_date=safe_date_convert(dates[0]), end_date=safe_date_convert(dates[1]), delta=timedelta(days=1)):
-    dprint(f"Update the day: {day}, (period: from {dates[0]} to {dates[1]})", priority_level=2)
-    dprint(f"Update multithreading mode: {APP_CONFIG.MULTI_THREADING}\n\n", priority_level=2)
+    dprint("Update the day: {}, (period: from {} to {})".format(day, dates[0], dates[1]), priority_level=2)
+    dprint("Update multithreading mode: {APP_CONFIG.MULTI_THREADING}\n\n", priority_level=2)
 
     # 8 tables + 6 controles qualites = 14 fonctions en paralleles
     if APP_CONFIG.MULTI_THREADING == "no":

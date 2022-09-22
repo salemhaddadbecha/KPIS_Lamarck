@@ -31,7 +31,7 @@ class ProductionConfig(BaseConfig):
     BOONDMANAGER_API_LOGIN = SECRET_CONFIG_STORE["boondManager_api_login"]
     BOONDMANAGER_API_PASSWORD = SECRET_CONFIG_STORE["boondManager_api_password"]
     DB_CONN_STR = SECRET_CONFIG_STORE["db_conn_str"]
-    CRONJOB_EXECUTION = "jour_precedent" # "test_period" | "jour_precedent"
+    CRONJOB_EXECUTION = "test_period" # "test_period" | "jour_precedent"
 
 class LocalConfig(BaseConfig):
     ENV = "local"
@@ -41,7 +41,7 @@ class LocalConfig(BaseConfig):
     BOONDMANAGER_API_URL = SECRET_CONFIG_STORE["boondManager_api_url"]
     BOONDMANAGER_API_LOGIN = SECRET_CONFIG_STORE["boondManager_api_login"]
     BOONDMANAGER_API_PASSWORD = SECRET_CONFIG_STORE["boondManager_api_password"]
-    DB_CONN_STR = f'sqlite:///{os.path.join(BASE_DIR, "database.db")}'
+    DB_CONN_STR = 'sqlite:///{}'.format(os.path.join(BASE_DIR, "database.db"))
     CRONJOB_EXECUTION = "test_period" # "test_period" | "jour_precedent"
 
 class ConfigurationException(Exception):

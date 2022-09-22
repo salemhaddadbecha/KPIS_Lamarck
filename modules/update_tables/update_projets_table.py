@@ -35,7 +35,7 @@ def check_new_and_update_projets(day):
     :param day:
     :return:
     """
-    dprint(f"Update project table", priority_level=3, preprint="\n")
+    dprint("Update project table", priority_level=3, preprint="\n")
     list_of_projets_to_update = get_list_of_element("/projects", period="updated", startDate=day,
                                                     endDate=day)
 
@@ -50,4 +50,4 @@ def check_new_and_update_projets(day):
             date_de_debut=projet_to_update_all_informations["date_de_debut"],
             date_de_fin=projet_to_update_all_informations["date_de_fin"]
         )
-        dprint(f"Update project: {projet_to_update_all_informations['boond_id']}", priority_level=4)
+        dprint("Update project: {}".format(projet_to_update_all_informations['boond_id']), priority_level=4)

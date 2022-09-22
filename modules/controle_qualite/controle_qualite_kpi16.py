@@ -28,7 +28,7 @@ def controle_1(day):
             :param projet:
             :return: liste des presnces des actions
             """
-            actions = get_list_of_element(f"/projects/{projet['id']}/actions")
+            actions = get_list_of_element("/projects/{}/actions".format(projet['id']))
             actions_lite = {
                 "roll probable": False,
                 "roll garanti": False,
@@ -57,7 +57,9 @@ def controle_1(day):
             [1 if value else 0 for value in actions.values()]
         )
 
-        defaut = f"Defaut KPI16: le projet {safe_dict_get(projet, ['attributes', 'reference'])} comporte plusieurs action de type 'Roll'"
+        defaut = "Defaut KPI16: le projet {} comporte plusieurs action de type 'Roll'".format(
+            safe_dict_get(projet, ['attributes', 'reference'])
+        )
         if roll_count >= 2:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -70,7 +72,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(projet, ["id"])
             )
-            dprint(f"[{safe_dict_get(projet, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(projet, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -80,7 +82,9 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = f"Defaut KPI16: le projet {safe_dict_get(projet, ['attributes', 'reference'])} ne comporte aucune action de type 'Roll'"
+        defaut = "Defaut KPI16: le projet {} ne comporte aucune action de type 'Roll'".format(
+            safe_dict_get(projet, ['attributes', 'reference'])
+        )
         if roll_count == 0:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -93,7 +97,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(projet, ["id"])
             )
-            dprint(f"#[{safe_dict_get(projet, ['id'])}] {defaut}", priority_level=4)
+            dprint("#[{}] {}".format(safe_dict_get(projet, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -119,5 +123,5 @@ def controle_qualite_kpi16(day):
     -   Tous les projets qui n’ont pas d’action d’un des 3 types
     -   Tous les projets qui ont plusieurs actions d’un des 3 types
     """
-    dprint(f"KPI16: controle qualite 1", priority_level=3, preprint="\n")
+    dprint("KPI16: controle qualite 1", priority_level=3, preprint="\n")
     controle_1(day)

@@ -47,7 +47,7 @@ def get_prestation_all_informations(basic_data):
     informations["date_de_fin"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "endDate"]))
 
     # Pour la suite il faut l'etat de la prestation
-    prestation = request(f"/deliveries/{informations['boond_id']}")
+    prestation = request("/deliveries/{}".format(informations['boond_id']))
 
     if safe_dict_get(prestation, ["data", "attributes", "state"]) is not None:
         informations["etat"] = etats[int(safe_dict_get(prestation, ["data", "attributes", "state"]))]
@@ -74,7 +74,7 @@ def check_new_and_update_prestations(day):
     :param day:
     :return:
     """
-    dprint(f"Update prestation table", priority_level=3, preprint="\n")
+    dprint("Update prestation table", priority_level=3, preprint="\n")
     list_of_prestations_to_update = get_list_of_element("/deliveries-groupments", period="updated",
                                                         startDate=day, endDate=day)
 
@@ -90,4 +90,6 @@ def check_new_and_update_prestations(day):
             date_de_fin=prestation_to_update_all_informations["date_de_fin"],
             etat=prestation_to_update_all_informations["etat"]
         )
-        dprint(f"Update candidat: {prestation_to_update_all_informations['boond_id']}", priority_level=4)
+        dprint("Update candidat: {}".format(
+            prestation_to_update_all_informations['boond_id']
+        ), priority_level=4)

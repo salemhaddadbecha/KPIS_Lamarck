@@ -36,7 +36,7 @@ def get_besoin_all_informations(basic_data):
         # date_maj_drae
         if informations["etat"] == "Draaae":
             # date de la maj à drae est la date de creation du projet associe
-            besoin_projet = request(f"/opportunities/{informations['boond_id']}/projects")
+            besoin_projet = request("/opportunities/{}/projects".format(informations['boond_id']))
             besoin_projet_debut = safe_dict_get(besoin_projet, ["data", -1, "attributes", "startDate"])
             informations["date_maj_drae"] = safe_date_convert(besoin_projet_debut)
     else:
@@ -60,7 +60,7 @@ def check_new_and_update_besoins(day):
     :param day:
     :return:
     """
-    dprint(f"Update besoin table", priority_level=3, preprint="\n")
+    dprint("Update besoin table", priority_level=3, preprint="\n")
     list_of_besoins_to_update = get_list_of_element("/opportunities", period="updated", startDate=day,
                                                     endDate=day)
 
@@ -78,4 +78,4 @@ def check_new_and_update_besoins(day):
             date_maj_drae=besoin_to_update_all_informations["date_maj_drae"],
             est_interne=besoin_to_update_all_informations["est_interne"]
         )
-        dprint(f"Update besoin: {besoin_to_update_all_informations['boond_id']}", priority_level=4)
+        dprint("Update besoin: {}".format(besoin_to_update_all_informations['boond_id']), priority_level=4)

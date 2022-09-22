@@ -26,7 +26,7 @@ def controle_1(day):
             :param contact:
             :return: provenance et le détail de la provenance (Boolean)
             """
-            informations = request(f"/contacts/{contact['id']}/information")
+            informations = request("/contacts/{}/information".format(contact['id']))
             check = {
                 "provenance": False,
                 "details_provenance": False
@@ -58,7 +58,9 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(contact, ["id"])
             )
-            dprint(f"[{safe_dict_get(contact, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(
+                safe_dict_get(contact, ['id']), defaut
+            ), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -81,7 +83,9 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(contact, ["id"])
             )
-            dprint(f"[{safe_dict_get(contact, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(
+                safe_dict_get(contact, ['id']), defaut
+            ), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -106,5 +110,5 @@ def controle_qualite_kpi8(day):
     """
     Reporting hebdo des clients sans provenance
     """
-    dprint(f"KPI8: controle qualite 1", priority_level=3, preprint="\n")
+    dprint("KPI8: controle qualite 1", priority_level=3, preprint="\n")
     controle_1(day)

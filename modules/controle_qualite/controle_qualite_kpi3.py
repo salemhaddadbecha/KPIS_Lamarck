@@ -28,7 +28,7 @@ def controle_1(day):
             :return:
             """
             check = False
-            administrative = request(f"/resources/{safe_dict_get(resource, ['id'])}/administrative")
+            administrative = request("/resources/{}/administrative".format(safe_dict_get(resource, ['id'])))
 
             if safe_dict_get(administrative, ["data", "relationships", "contracts", "data"]) is not None and \
                     len(safe_dict_get(administrative, ["data", "relationships", "contracts", "data"])) > 0:
@@ -49,7 +49,7 @@ def controle_1(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -102,7 +102,7 @@ def controle_2(day):
         ]
         title = safe_dict_get(resource, ["attributes", "title"])
 
-        defaut = f"Defaut KPI3: titre de la resource non conforme: '{title}'"
+        defaut = "Defaut KPI3: titre de la resource non conforme: '{}'".format(title)
         if title not in liste_titre_autorise:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -115,7 +115,7 @@ def controle_2(day):
                 est_corrige=False,
                 id_correspondant=safe_dict_get(resource, ["id"])
             )
-            dprint(f"[{safe_dict_get(resource, ['id'])}] {defaut}", priority_level=4)
+            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -141,7 +141,7 @@ def controle_qualite_kpi3(day):
     Existence pour tous les consultants d’au
     moins une ligne dans le bloc Ressources > Administratif > Contrat RH
     """
-    dprint(f"KPI3: controle qualite 1", priority_level=3, preprint="\n")
+    dprint("KPI3: controle qualite 1", priority_level=3, preprint="\n")
     controle_1(day)
 
     # Point de controle 2:
@@ -149,5 +149,5 @@ def controle_qualite_kpi3(day):
     Mettre à jour l’ensemble des titres de profils Ressources pour standardiser 
     les titres avec le profil du consultant
     """
-    dprint(f"KPI3: controle qualite 2", priority_level=3, preprint="\n")
+    dprint("KPI3: controle qualite 2", priority_level=3, preprint="\n")
     controle_2(day)

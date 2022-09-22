@@ -76,12 +76,12 @@ def get_resource_all_informations(basic_data, list_of_agencies):
     informations["type"] = safe_dict_get(list_type, [safe_dict_get(basic_data, ["attributes", "typeOf"])])
 
     # Pour avoir la date de recrutement, il faut faire une requête de plus
-    administrative_informations = request(f"/resources/{informations['boond_id']}/administrative")
+    administrative_informations = request("/resources/{}/administrative".format(informations['boond_id']))
     debut_premier_contrat = None
     if safe_dict_get(administrative_informations, ["data", "relationships", "contracts", "data", -1, "id"]):
         id_premier_contrat = safe_dict_get(administrative_informations,
                                            ["data", "relationships", "contracts", "data", -1, "id"])
-        premier_contrat = request(f"/contracts/{id_premier_contrat}")
+        premier_contrat = request("/contracts/{}".format(id_premier_contrat))
         debut_premier_contrat = safe_dict_get(premier_contrat, ["data", "attributes", "startDate"])
 
     informations["date_de_recrutement"] = safe_date_convert(debut_premier_contrat)
@@ -97,7 +97,7 @@ def check_new_and_update_resources(day):
     """
     list_of_agencies = get_list_of_agencies()
 
-    dprint(f"Update resource table", priority_level=3, preprint="\n")
+    dprint("Update resource table", priority_level=3, preprint="\n")
     list_of_resources_to_update = get_list_of_element("/resources", period="updated", startDate=day,
                                                       endDate=day)
 
@@ -122,5 +122,8 @@ def check_new_and_update_resources(day):
             date_de_recrutement=resource_to_update_all_informations["date_de_recrutement"]
         )
         dprint(
-            f"Update resource: {resource_to_update_all_informations['nom']} {resource_to_update_all_informations['prenom']}",
+            "Update resource: {} {}".format(
+                resource_to_update_all_informations['nom'],
+                resource_to_update_all_informations['prenom']
+            ),
             priority_level=4)

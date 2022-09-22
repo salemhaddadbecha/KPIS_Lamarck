@@ -49,7 +49,7 @@ def check_new_and_update_temps(day):
     :param day:
     :return:
     """
-    dprint(f"Update temps table", priority_level=3, preprint="\n")
+    dprint("Update temps table", priority_level=3, preprint="\n")
 
     list_of_new_temps = get_list_of_element("/reporting-resources", extractType="inDays", period="onePeriod",
                                             maxResources=10, startDate=day, endDate=day)
@@ -69,4 +69,4 @@ def check_new_and_update_temps(day):
                 boond_id_projet=new_temps_all_informations["boond_id_projet"],
                 boond_resource_id=new_temps_all_informations["boond_resource_id"]
             )
-            dprint(f"Update candidat: {new_temps_all_informations['boond_id']}", priority_level=4)
+            dprint("Update candidat: {}".format(new_temps_all_informations['boond_id']), priority_level=4)

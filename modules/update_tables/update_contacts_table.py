@@ -41,7 +41,7 @@ def get_contact_all_informations(basic_data):
     informations["date_de_creation"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "creationDate"]))
 
     # Pour la provenance et la date il nous faut plus d'informations
-    contact = request(f"/contacts/{informations['boond_id']}/information")
+    contact = request("/contacts/{}/information".format(informations['boond_id']))
 
     if safe_dict_get(contact, ["data", "attributes", "origin", "typeOf"]) is not None:
         informations["provenance"] = safe_dict_get(provenances, [
@@ -57,7 +57,7 @@ def check_new_and_update_contacts(day):
     :param day:
     :return:
     """
-    dprint(f"Update contact table", priority_level=3, preprint="\n")
+    dprint("Update contact table", priority_level=3, preprint="\n")
     list_of_contacts_to_update = get_list_of_element("/contacts", period="updated", startDate=day,
                                                      endDate=day)
     for contact_to_update_basic_informations in list_of_contacts_to_update:
@@ -75,5 +75,8 @@ def check_new_and_update_contacts(day):
             date_de_creation=contact_to_update_all_informations["date_de_creation"]
         )
         dprint(
-            f"Update candidat: {contact_to_update_all_informations['nom']} {contact_to_update_all_informations['prenom']}",
+            "Update candidat: {} {}".format(
+                contact_to_update_all_informations['nom'],
+                contact_to_update_all_informations['prenom']
+            ),
             priority_level=4)

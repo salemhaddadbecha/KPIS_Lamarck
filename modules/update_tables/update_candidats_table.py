@@ -68,14 +68,14 @@ def get_candidate_all_informations(basic_data):
     informations["commentaire_provenance_cv"] = safe_dict_get(basic_data, ["attributes", "source", "detail"])
     informations["recrute"] = (safe_dict_get(basic_data, ["attributes", "state"]) == etape_recrute)
     if informations["recrute"] is not None:
-        details_candidat = request(f"/candidates/{informations['boond_id']}/information")
+        details_candidat = request("/candidates/{}/information".format(informations['boond_id']))
         informations["boond_ressource_id"] = safe_dict_get(details_candidat,
                                                            ["data", "relationships", "resource", "data", "id"])
     else:
         informations["boond_ressource_id"] = safe_dict_get(basic_data, ["relationships", "resource", "data", "id"])
 
     # Pour les infos prise_de_contact & recontacte il faut aller voir les actions
-    actions = request(f"/candidates/{informations['boond_id']}/actions")
+    actions = request("/candidates/{}/actions".format(informations['boond_id']))
     liste_des_actions = safe_dict_get(actions, ["data"])
 
     # Si il a eu un entretien, alors il a dejà eu prise de contact et recontacte
@@ -118,7 +118,7 @@ def check_new_and_update_candidates(day):
     :param day:
     :return:
     """
-    dprint(f"Update candidates table", priority_level=3, preprint="\n")
+    dprint("Update candidates table", priority_level=3, preprint="\n")
     list_of_candidates_to_update = get_list_of_element("/candidates", period="updated", startDate=day,
                                                        endDate=day)
 
@@ -146,5 +146,8 @@ def check_new_and_update_candidates(day):
         )
 
         dprint(
-            f"Update candidat: {candidate_to_update_all_informations['nom']} {candidate_to_update_all_informations['prenom']}",
+            "Update candidat: {} {}".format(
+                candidate_to_update_all_informations['nom'],
+                candidate_to_update_all_informations['prenom']
+            ),
             priority_level=4)

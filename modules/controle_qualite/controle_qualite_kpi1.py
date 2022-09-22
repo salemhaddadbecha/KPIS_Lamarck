@@ -27,7 +27,9 @@ def controle_1(key, element, day):
         new_actions = False
 
         # Fonctionne pour les candidats et les resources
-        actions = request(f"{endpoint}/{safe_dict_get(element, ['id'])}/actions")
+        actions = request("{}/{}/actions".format(
+            endpoint, safe_dict_get(element, ['id'])
+        ))
 
         for action in safe_dict_get(actions, ["data"]):
             action_date_str = safe_dict_get(action, ["attributes", "creationDate"])
@@ -37,9 +39,9 @@ def controle_1(key, element, day):
 
         return new_actions
 
-    check = _are_there_any_actions_created(f"/{key}", element, day)
+    check = _are_there_any_actions_created("/{}".format(key), element, day)
 
-    defaut = f"Defaut KPI1: {key} cree mais aucune action a ete saisie"
+    defaut = "Defaut KPI1: {} cree mais aucune action a ete saisie".format(key)
     if not check:
         safe_update_table_row(
             table=Controle_qualite,
@@ -52,7 +54,9 @@ def controle_1(key, element, day):
             est_corrige=False,
             id_correspondant=safe_dict_get(element, ["id"])
         )
-        dprint(f"[{safe_dict_get(element, ['id'])}] {defaut}", priority_level=4)
+        dprint("[{}] {}".format(
+            safe_dict_get(element, ['id']), defaut
+        ), priority_level=4)
     else:
         safe_update_table_row(
             table=Controle_qualite,
@@ -84,7 +88,7 @@ def controle_2(key, element, day):
 
         manager_id = safe_dict_get(element, ["relationships", "mainManager", "data", "id"])
         if manager_id is not None:
-            manager_informations = request(f"/resources/{manager_id}/information")
+            manager_informations = request("/resources/{}/information".format(manager_id))
 
         liste_etats = ["out", "en mission", "en interne", "en arrêt", "signe"]
 
@@ -97,7 +101,7 @@ def controle_2(key, element, day):
 
     is_out = _is_manager_out(element)
 
-    defaut = f"Defaut KPI1: {key} modifie mais sourceur 'out' (plus dans le groupe Lamarck)"
+    defaut = "Defaut KPI1: {} modifie mais sourceur 'out' (plus dans le groupe Lamarck)".format(key)
     if is_out:
         safe_update_table_row(
             table=Controle_qualite,
@@ -110,7 +114,9 @@ def controle_2(key, element, day):
             est_corrige=False,
             id_correspondant=safe_dict_get(element, ["id"])
         )
-        dprint(f"[{safe_dict_get(element, ['id'])}] {defaut}", priority_level=4)
+        dprint("[{}] {}".format(
+            safe_dict_get(element, ['id']), defaut
+        ), priority_level=4)
     else:
         safe_update_table_row(
             table=Controle_qualite,
@@ -137,10 +143,10 @@ def controle_qualite_kpi1(day):
         for element in value:
             # Point de controle 1: Extraction des personnes qui ont ete modifiees ou creees
             # dans la semaine sans action saisie
-            dprint(f"KPI1: controle qualite 1", priority_level=3, preprint="\n")
+            dprint("KPI1: controle qualite 1", priority_level=3, preprint="\n")
             controle_1(key, element, day)
 
             # Point de controle 2: Extraire toutes les personnes qui ont ete modifiees
             # dans la semaine avec un sourceur qui n’est plus dans le groupe Lamarck
-            dprint(f"KPI1: controle qualite 2", priority_level=3, preprint="\n")
-            controle_2(key, element)
+            dprint("KPI1: controle qualite 2", priority_level=3, preprint="\n")
+            controle_2(key, element, day)
