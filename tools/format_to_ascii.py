@@ -1,8 +1,8 @@
 import os
 
 path_list = [
-    "modules/controle_qualite",
-    "modules/update_tables"
+    os.path.join("modules", "controle_qualite"),
+    os.path.join("modules", "update_tables")
 ]
 
 

@@ -20,13 +20,13 @@ def get_resource_all_informations(basic_data, list_of_agencies):
         "directeur",
         "drh",
         "responsable",
-        "gérant",
+        "gerant",
         "gerant",
         "ressources humaines",
         "recrutement"
     ]
-    list_type = ["Consultant Interne", "Consultant Externe", "Comptabilité", "Business Manager", "Associé",
-                 "Recrutement / RH", "DRH", "DAF", "0", "non renseigné"]
+    list_type = ["Consultant Interne", "Consultant Externe", "Comptabilite", "Business Manager", "Associe",
+                 "Recrutement / RH", "DRH", "DAF", "0", "non renseigne"]
     liste_etats = ["out", "en mission", "en interne", "en arrêt", "signe", "non renseigne"]
     # Infos à trouver
     informations = {

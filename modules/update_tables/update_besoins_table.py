@@ -14,7 +14,7 @@ def get_besoin_all_informations(basic_data):
     """
     # Indexation d'elements utiles:
     list_etats = ["Piste", "Draaae", "Perdu", "Abandonnee", "En cours", "5", "Soutenance", "ADR", "8", "Reporte",
-                  "non renseigné"]
+                  "non renseigne"]
 
     # Infos à trouver
     informations = {
@@ -43,7 +43,7 @@ def get_besoin_all_informations(basic_data):
         informations["etat"] = None
         informations["date_maj_drae"] = None
 
-    # Vérification des refacturations: si contient refacturation ET un noms de l'une des agences
+    # Verification des refacturations: si contient refacturation ET un noms de l'une des agences
     titre = safe_date_convert(safe_dict_get(basic_data, ["attributes", "title"]))
     informations["est_interne"] = False
     if titre is not None and "refacturation" in titre.lower():

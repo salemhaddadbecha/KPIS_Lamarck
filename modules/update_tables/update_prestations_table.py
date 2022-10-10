@@ -60,7 +60,7 @@ def get_prestation_all_informations(basic_data):
             informations["ca_ht"] = safe_dict_get(prestation, ["data", "attributes", "turnoverSimulatedExcludingTax"])
 
     # TODO: gerer pour les forfaits !!
-    # Calcul du CA réalisé: nb de jours passés (temps consommés) * prix à la journée
+    # Calcul du CA realise: nb de jours passes (temps consommes) * prix à la journee
     temps_consomme = _get_temps_consomme(safe_dict_get(prestation, ["data", "relationships", "project", "data", "id"]))
     informations["ca_realise"] = safe_dict_get(prestation,
                                                ["data", "attributes", "averageDailyPriceExcludingTax"]) * temps_consomme

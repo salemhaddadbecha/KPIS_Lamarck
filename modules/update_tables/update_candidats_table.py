@@ -17,7 +17,7 @@ def get_candidate_all_informations(basic_data):
     etape_recrute = 3
     provenance_cv = [
         "jobboard",
-        "Site Société",
+        "Site Societe",
         "Cooptation Consultant",
         "Cooptation Client",
         "Cooptation Candidat",

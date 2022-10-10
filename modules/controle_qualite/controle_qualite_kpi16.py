@@ -15,7 +15,7 @@ def controle_1(day):
 
     def _create_failure(projet, day):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param projet:
         :param day:
         :return:
@@ -23,7 +23,7 @@ def controle_1(day):
 
         def _get_projet_actions(projet):
             """
-            Permet de récupérer les actions liees a un projet, et de verifier
+            Permet de recuperer les actions liees a un projet, et de verifier
             que les actions: roll probable | garanti | indetermine sont present ou non
             :param projet:
             :return: liste des presnces des actions

@@ -14,7 +14,7 @@ def controle_1(day):
 
     def _create_failure(resource, day):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param resource:
         :param day:
         :return:
@@ -51,7 +51,7 @@ def controle_1(day):
 
             if last_prestation_lite["debut"] is not False and \
                     last_prestation_lite["fin"] is not False and \
-                    last_prestation_lite["debut"] <= day <= last_prestation_lite["fin"]:
+                    last_prestation_lite["debut"] <= save_date_convert(day) <= last_prestation_lite["fin"]:
                 last_prestation_lite["en_cours"] = True
             return last_prestation_lite
 

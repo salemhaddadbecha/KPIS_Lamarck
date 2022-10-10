@@ -19,15 +19,15 @@ def controle_1(day):
 
     def _create_failure(candidat):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param candidat:
         :return:
         """
 
         def _get_candidat_provenance(candidat):
             """
-            Permet de récupérer la provenance et le détail de la provenance
-            du candidat entré en paramètre
+            Permet de recuperer la provenance et le detail de la provenance
+            du candidat entre en parametre
             :param candidat:
             :return:
             """
@@ -98,7 +98,7 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-    # candidateStates=3 -> que en statut recruté
+    # candidateStates=3 -> que en statut recrute
     for candidat in get_list_of_element("/candidates", candidateStates=3, startDate=day, endDate=day,
                                         period="updated"):
         _create_failure(candidat)
@@ -114,7 +114,7 @@ def controle_2(day):
 
     def create_failure(candidat):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param candidat:
         :return:
         """
@@ -125,7 +125,7 @@ def controle_2(day):
 
         ressource = get_associated_ressource(candidat)
 
-        defaut = "Defaut KPI2: Candidat recruté (fiche ressource créée) mais son statut n'est pas à jour"
+        defaut = "Defaut KPI2: Candidat recrute (fiche ressource creee) mais son statut n'est pas à jour"
         if ressource is not None:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -150,7 +150,7 @@ def controle_2(day):
                 est_corrige=True,
             )
 
-    # On reprend tous les candidats sur les 4 derniers mois: durée moyenne de recrutement
+    # On reprend tous les candidats sur les 4 derniers mois: duree moyenne de recrutement
     for candidat in get_list_of_element("/candidates", startDate=safe_date_convert(day) - timedelta(weeks=4 * 4),
                                         endDate=day, period="updated"):
         create_failure(candidat)
@@ -167,7 +167,7 @@ def controle_3(day, agencies):
 
     def create_failure(candidat, agencies):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param candidat:
         :param agencies:
         :return:
@@ -175,7 +175,7 @@ def controle_3(day, agencies):
 
         def get_candidat_agency(candidat, agencies):
             """
-            Permet de récupérer l'agence rattachée à un candidat
+            Permet de recuperer l'agence rattachee à un candidat
             :param candidat:
             :param agencies:
             :return:

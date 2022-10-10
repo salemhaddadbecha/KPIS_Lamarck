@@ -20,7 +20,7 @@ def controle_1(key, element, day):
 
     def _are_there_any_actions_created(endpoint, element, day):
         """
-        Permet de savoit si des nouvelles actions ont été créées sur l'élément
+        Permet de savoit si des nouvelles actions ont ete creees sur l'element
         :param element:
         :return: nouvelles actions (boolean)
         """
@@ -79,7 +79,7 @@ def controle_2(key, element, day):
 
     def _is_manager_out(element):
         """
-        Permet de récupérer l'état du manager de l'élément, et de savoit s'il est OUT
+        Permet de recuperer l'etat du manager de l'element, et de savoit s'il est OUT
         :param element:
         :return: out (boolean)
         """

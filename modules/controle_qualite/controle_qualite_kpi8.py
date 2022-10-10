@@ -14,7 +14,7 @@ def controle_1(day):
 
     def _create_failure(contact, day):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param contact:
         :param day:
         :return:
@@ -22,9 +22,9 @@ def controle_1(day):
 
         def _get_contact_provenance(contact):
             """
-            Permet de savoir si la provenance et le détail de la provenance d'un contact sont présents
+            Permet de savoir si la provenance et le detail de la provenance d'un contact sont presents
             :param contact:
-            :return: provenance et le détail de la provenance (Boolean)
+            :return: provenance et le detail de la provenance (Boolean)
             """
             informations = request("/contacts/{}/information".format(contact['id']))
             check = {

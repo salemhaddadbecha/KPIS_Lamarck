@@ -15,7 +15,7 @@ def controle_1(day):
 
     def _create_failure(resource, day):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param resource:
         :param day:
         :return:
@@ -23,7 +23,7 @@ def controle_1(day):
 
         def _get_hr_contract(resource):
             """
-            Permet de récupérer tous les contrats RH d'une ressource
+            Permet de recuperer tous les contrats RH d'une ressource
             :param resource:
             :return:
             """
@@ -73,7 +73,7 @@ def controle_2(day):
 
     def _create_failure(resource, day):
         """
-        Crée ou non (en fonction des consignes de controle) un relevé de défaut dans la table Controle qualite
+        Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param resource:
         :param day:
         :return:

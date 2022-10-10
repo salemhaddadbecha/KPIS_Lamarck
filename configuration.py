@@ -26,7 +26,7 @@ class ProductionConfig(BaseConfig):
     ENV = "production"
     DEBUG = 1
     PRIORITY_DEBUG_LEVEL = 10
-    MULTI_THREADING = "no"# no | "soft" | "hard"
+    MULTI_THREADING = "soft"# no | "soft" | "hard"
     BOONDMANAGER_API_URL = SECRET_CONFIG_STORE["boondManager_api_url"]
     BOONDMANAGER_API_LOGIN = SECRET_CONFIG_STORE["boondManager_api_login"]
     BOONDMANAGER_API_PASSWORD = SECRET_CONFIG_STORE["boondManager_api_password"]
