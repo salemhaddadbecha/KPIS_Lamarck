@@ -36,7 +36,10 @@ def controle_1(day):
 
             return check
 
-        defaut = "Defaut KPI3: aucun contract RH renseigne sur la resource"
+        defaut = "Défaut KPI3: aucun contract RH n'est renseigné sur la resource {} {}.".format(
+            safe_dict_get(resource, ["attributes", 'lastName']),
+            safe_dict_get(resource, ["attributes", 'firstName']),
+        )
         if not _get_hr_contract(resource):
             safe_update_table_row(
                 table=Controle_qualite,
@@ -106,7 +109,10 @@ def controle_2(day):
         ]
         title = safe_dict_get(resource, ["attributes", "title"])
 
-        defaut = "Défaut KPI3: Le titre de la ressource est non conforme : '{}'".format(title)
+        defaut = "Défaut KPI3: Le titre de la ressource {} {} est non conforme : '{}'".format(
+            safe_dict_get(resource, ["attributes", 'lastName']),
+            safe_dict_get(resource, ["attributes", 'firstName']),
+            title)
         if title not in liste_titre_autorise:
             safe_update_table_row(
                 table=Controle_qualite,
