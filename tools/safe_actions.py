@@ -171,6 +171,11 @@ def get_period_dates():
         last_month = date - timedelta(weeks=300)
         return [last_month.strftime('%Y-%m-%d'), date.strftime('%Y-%m-%d')]
 
+    elif APP_CONFIG.CRONJOB_EXECUTION == "interval":
+        start_date = datetime.strptime(APP_CONFIG.INTERVAL_START, '%Y-%m-%d')
+        end_date = datetime.strptime(APP_CONFIG.INTERVAL_END, '%Y-%m-%d')
+        return [start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d')]
+
     return [date.strftime('%Y-%m-%d'), date.strftime('%Y-%m-%d')]
 
 

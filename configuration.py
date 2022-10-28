@@ -20,6 +20,8 @@ class BaseConfig(object):
     APPLICATION_NAME = 'kpis'
     DEBUG = 1
     BASE_DIR = BASE_DIR
+    INTERVAL_START = '2021-10-19'
+    INTERVAL_END = '2022-10-28'
 
 
 class ProductionConfig(BaseConfig):
@@ -31,7 +33,7 @@ class ProductionConfig(BaseConfig):
     BOONDMANAGER_API_LOGIN = SECRET_CONFIG_STORE["boondManager_api_login"]
     BOONDMANAGER_API_PASSWORD = SECRET_CONFIG_STORE["boondManager_api_password"]
     DB_CONN_STR = SECRET_CONFIG_STORE["db_conn_str"]
-    CRONJOB_EXECUTION = "test_period" # "test_period" | "jour_precedent"
+    CRONJOB_EXECUTION = "interval" # "test_period" | "jour_precedent"
 
 class LocalConfig(BaseConfig):
     ENV = "local"
