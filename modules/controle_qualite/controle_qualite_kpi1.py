@@ -135,7 +135,6 @@ def controle_qualite_kpi1(day):
     """
     people = {
         "candidates": get_list_of_element("/candidates", period="updated", startDate=day, endDate=day),
-        "resources": get_list_of_element("/resources", period="updated", startDate=day, endDate=day)
     }
 
     for key, value in people.items():
