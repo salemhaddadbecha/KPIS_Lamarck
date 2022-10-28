@@ -48,7 +48,10 @@ def controle_1(day):
 
         check = _get_candidat_provenance(candidat)
 
-        defaut = "Defaut KPI2: Candidat recrute mais aucune provenance renseignee"
+        defaut = "Défaut KPI2: Le candidat {} {} est recruté mais aucune provenance du CV n'est renseignée".format(
+            safe_dict_get(candidat, ["attributes", 'lastName']),
+            safe_dict_get(candidat, ["attributes", 'firstName'])
+        )
         if not check["provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
