@@ -106,7 +106,7 @@ def controle_2(day):
         ]
         title = safe_dict_get(resource, ["attributes", "title"])
 
-        defaut = "Defaut KPI3: titre de la resource non conforme: '{}'".format(title)
+        defaut = "Défaut KPI3: Le titre de la ressource est non conforme : '{}'".format(title)
         if title not in liste_titre_autorise:
             safe_update_table_row(
                 table=Controle_qualite,
