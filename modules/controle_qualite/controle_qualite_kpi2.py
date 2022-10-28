@@ -76,7 +76,11 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI2: Candidat recrute mais aucun detail sur sa provenance est renseigne"
+        defaut = "Défaut KPI2: Le candidat {} {} est recruté mais aucun détail (champ commentaire) sur sa " \
+                 "provenance n'est renseignée.".format(
+            safe_dict_get(candidat, ["attributes", 'lastName']),
+            safe_dict_get(candidat, ["attributes", 'firstName'])
+        )
         if not check["details_provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
