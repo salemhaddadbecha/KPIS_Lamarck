@@ -41,7 +41,10 @@ def controle_1(key, element, day):
 
     check = _are_there_any_actions_created("/{}".format(key), element, day)
 
-    defaut = "Defaut KPI1: {} cree mais aucune action a ete saisie".format(key)
+    defaut = "Défaut KPI1: Le candidat {} {} a été crée sans aucune action saisie.".format(
+        safe_dict_get(element, ["attributes", 'lastName']),
+        safe_dict_get(element, ["attributes", 'firstName'])
+    )
     if not check:
         safe_update_table_row(
             table=Controle_qualite,
