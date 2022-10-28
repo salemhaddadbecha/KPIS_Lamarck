@@ -156,7 +156,7 @@ def controle_2(day):
         create_failure(candidat)
 
 
-def controle_3(day, agencies):
+def controle_3(day):
     """
     Rapport hebdo sur les candidats ayant
     comme agence « Lamarck Group » en fonction du type de poste
@@ -165,7 +165,7 @@ def controle_3(day, agencies):
     :return:
     """
 
-    def create_failure(candidat, agencies):
+    def create_failure(candidat):
         """
         Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param candidat:
@@ -173,28 +173,28 @@ def controle_3(day, agencies):
         :return:
         """
 
-        def get_candidat_agency(candidat, agencies):
+        def get_candidat_agency(candidat):
             """
             Permet de recuperer l'agence rattachee à un candidat
             :param candidat:
-            :param agencies:
             :return:
             """
-            candidat_agency = None
-            candidat_informations = None
 
             candidat_id = safe_dict_get(candidat, ["id"])
 
-            if candidat_id is not None:
-                candidat_informations = request("/candidates/{}/information".format(candidat_id))
+            if not candidat_id:
+                return None
 
-            if safe_dict_get(candidat_informations, ["attributes", "state"]) is not None:
-                candidat_agency = safe_dict_get(agencies,
-                                                [int(safe_dict_get(candidat_informations, ["attributes", "state"]))])
+            candidat_informations = request("/candidates/{}/information".format(candidat_id))
 
-            return candidat_agency
+            for included_item in safe_dict_get(candidat_informations, ["included"]):
+                if safe_dict_get(included_item, ["type"]).upper() != "AGENCY":
+                    continue
+                return safe_dict_get(included_item, ["attributes", "name"])
 
-        candidat_agency = get_candidat_agency(candidat, agencies)
+            return None
+
+        candidat_agency = get_candidat_agency(candidat)
 
         defaut = "Defaut KPI2: Candidat lie à 'Lamarck Group'"
         if candidat_agency == "Lamarck Group":
@@ -222,7 +222,7 @@ def controle_3(day, agencies):
             )
 
     for candidat in get_list_of_element("/candidates", startDate=day, endDate=day, period="updated"):
-        create_failure(candidat, agencies)
+        create_failure(candidat)
 
 
 def controle_qualite_kpi2(day):
@@ -255,5 +255,4 @@ def controle_qualite_kpi2(day):
     comme agence « Lamarck Group » en fonction du type de poste
     """
     dprint("KPI2: controle qualite 3", priority_level=3, preprint="\n")
-    agencies = get_list_of_agencies()
-    controle_3(day, agencies)
+    controle_3(day)
