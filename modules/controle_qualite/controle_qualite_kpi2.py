@@ -132,7 +132,10 @@ def controle_2(day):
 
         ressource = get_associated_ressource(candidat)
 
-        defaut = "Defaut KPI2: Candidat recrute (fiche ressource creee) mais son statut n'est pas à jour"
+        defaut = "Défaut KPI2: Le candidat {} {} recruté (fiche ressource créée) mais son statut n'est pas à jour".format(
+            safe_dict_get(candidat, ["attributes", 'lastName']),
+            safe_dict_get(candidat, ["attributes", 'firstName'])
+        )
         if ressource is not None:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -203,7 +206,10 @@ def controle_3(day):
 
         candidat_agency = get_candidat_agency(candidat)
 
-        defaut = "Defaut KPI2: Candidat lie à 'Lamarck Group'"
+        defaut = "Défaut KPI2: Le candidat {} {} est lié à 'Lamarck Group'".format(
+            safe_dict_get(candidat, ["attributes", 'lastName']),
+            safe_dict_get(candidat, ["attributes", 'firstName'])
+        )
         if candidat_agency == "Lamarck Group":
             safe_update_table_row(
                 table=Controle_qualite,
