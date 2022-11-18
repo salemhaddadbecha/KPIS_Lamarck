@@ -36,7 +36,7 @@ def controle_1(day):
 
             return check
 
-        defaut = "Défaut KPI3: aucun contract RH n'est renseigné sur la resource {} {}.".format(
+        defaut = "Défaut KPI3: Aucun contrat RH n'est renseigné sur la ressource {} {}.".format(
             safe_dict_get(resource, ["attributes", 'lastName']),
             safe_dict_get(resource, ["attributes", 'firstName']),
         )
