@@ -41,7 +41,7 @@ def controle_1(key, element, day):
 
     check = _are_there_any_actions_created("/{}".format(key), element, day)
 
-    defaut = "Défaut KPI1: Le candidat {} {} a été crée sans aucune action saisie.".format(
+    defaut = "Défaut KPI1: Le candidat {} {} a été créé sans aucune action saisie.".format(
         safe_dict_get(element, ["attributes", 'lastName']),
         safe_dict_get(element, ["attributes", 'firstName'])
     )
@@ -99,12 +99,16 @@ def controle_2(key, element, day):
             main_manager_etat = safe_dict_get(liste_etats,
                                               [int(safe_dict_get(manager_informations, ["attributes", "state"]))])
             if main_manager_etat is not None:
-                out = (main_manager_etat == "out")
+                out = (str(main_manager_etat).lower() == "out")
         return out
 
     is_out = _is_manager_out(element)
 
-    defaut = "Defaut KPI1: {} modifie mais sourceur 'out' (plus dans le groupe Lamarck)".format(key)
+    defaut = "Défaut KPI1: Le candidat {} {} est modifié dans la semaine mais son sourceur n'est " \
+             "plus dans le groupe Lamarck.".format(
+        safe_dict_get(element, ["attributes", 'lastName']),
+        safe_dict_get(element, ["attributes", 'firstName'])
+    )
     if is_out:
         safe_update_table_row(
             table=Controle_qualite,

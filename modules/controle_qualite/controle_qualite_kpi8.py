@@ -45,7 +45,10 @@ def controle_1(day):
 
         check = _get_contact_provenance(contact)
 
-        defaut = "Defaut KPI8: Contact cree mais aucune provenance renseignee"
+        defaut = "Défaut KPI8: Le contact {} {} est créé mais aucune provenance n'est renseignée.".format(
+            safe_dict_get(contact, ['attributes', 'lastName']),
+            safe_dict_get(contact, ['attributes', 'firstName'])
+        )
         if not check["provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
@@ -70,7 +73,10 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI8: Contact cree mais aucun detail sur sa provenance est renseigne"
+        defaut = "Défaut KPI8: Le contact {} {} est créé mais aucun détail sur sa provenance n'est renseignée.".format(
+            safe_dict_get(contact, ['attributes', 'lastName']),
+            safe_dict_get(contact, ['attributes', 'firstName'])
+        )
         if not check["details_provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,

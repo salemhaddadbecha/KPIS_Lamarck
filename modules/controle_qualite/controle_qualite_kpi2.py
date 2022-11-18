@@ -48,7 +48,7 @@ def controle_1(day):
 
         check = _get_candidat_provenance(candidat)
 
-        defaut = "Défaut KPI2: Le candidat {} {} est recruté mais aucune provenance du CV n'est renseignée".format(
+        defaut = "Défaut KPI2: Le candidat {} {} est recruté mais aucune provenance du CV n'est renseignée.".format(
             safe_dict_get(candidat, ["attributes", 'lastName']),
             safe_dict_get(candidat, ["attributes", 'firstName'])
         )
@@ -132,7 +132,7 @@ def controle_2(day):
 
         ressource = get_associated_ressource(candidat)
 
-        defaut = "Défaut KPI2: Le candidat {} {} recruté (fiche ressource créée) mais son statut n'est pas à jour".format(
+        defaut = "Défaut KPI2: Le candidat {} {} est recruté (fiche ressource créée) mais son statut n'est pas à jour.".format(
             safe_dict_get(candidat, ["attributes", 'lastName']),
             safe_dict_get(candidat, ["attributes", 'firstName'])
         )
@@ -206,7 +206,7 @@ def controle_3(day):
 
         candidat_agency = get_candidat_agency(candidat)
 
-        defaut = "Défaut KPI2: Le candidat {} {} est lié à 'Lamarck Group'".format(
+        defaut = "Défaut KPI2: Le candidat {} {} est lié à 'Lamarck Group'.".format(
             safe_dict_get(candidat, ["attributes", 'lastName']),
             safe_dict_get(candidat, ["attributes", 'firstName'])
         )

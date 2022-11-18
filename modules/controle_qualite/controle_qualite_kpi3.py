@@ -109,7 +109,7 @@ def controle_2(day):
         ]
         title = safe_dict_get(resource, ["attributes", "title"])
 
-        defaut = "Défaut KPI3: Le titre de la ressource {} {} est non conforme : '{}'".format(
+        defaut = "Défaut KPI3: Le titre de la ressource {} {} est non conforme : '{}'.".format(
             safe_dict_get(resource, ["attributes", 'lastName']),
             safe_dict_get(resource, ["attributes", 'firstName']),
             title)

@@ -57,7 +57,7 @@ def controle_1(day):
 
         last_prestation = _get_last_prestation(resource, day)
 
-        defaut = "Defaut KPI12: Le dernier contrat de {} {} n'a pas de date de debut".format(
+        defaut = "Défaut KPI12: Le dernier contrat de la ressource {} {} n'a pas de date de debut.".format(
             safe_dict_get(resource, ['attributes', 'lastName']),
             safe_dict_get(resource, ['attributes', 'firstName'])
         )
@@ -84,7 +84,7 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI12: Le dernier contrat de {} {} n'a pas de date de fin".format(
+        defaut = "Défaut KPI12: Le dernier contrat de la ressource {} {} n'a pas de date de fin".format(
             safe_dict_get(resource, ['attributes', 'lastName']),
             safe_dict_get(resource, ['attributes', 'firstName'])
         )
@@ -111,7 +111,7 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI12: {} {} n'a pas d'etat de renseigne (en mission, en interne, etc)".format(
+        defaut = "Défaut KPI12: La ressource {} {} n'a pas d'état de renseigne (en mission, en interne, etc).".format(
             safe_dict_get(resource, ['attributes', 'lastName']),
             safe_dict_get(resource, ['attributes', 'firstName'])
         )
@@ -137,7 +137,8 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI12: {} {} etat 'en mission' alors qu'aucune mission est en cours".format(
+        defaut = "Défaut KPI12: La ressource {} {} a un état 'en mission' " \
+                 "alors qu'aucune mission en cours ne lui est associée.".format(
             safe_dict_get(resource, ['attributes', 'lastName']),
             safe_dict_get(resource, ['attributes', 'firstName'])
         )
@@ -163,7 +164,8 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI12: {} {} etat 'en interne' alors qu'une mission est en cours".format(
+        defaut = "Défaut KPI12: La ressource {} {} a un état 'en interne' alors" \
+                 " qu'une mission en cours lui est associée.".format(
             safe_dict_get(resource, ['attributes', 'lastName']),
             safe_dict_get(resource, ['attributes', 'firstName'])
         )

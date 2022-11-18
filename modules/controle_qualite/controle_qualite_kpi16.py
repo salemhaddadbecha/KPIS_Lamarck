@@ -57,7 +57,7 @@ def controle_1(day):
             [1 if value else 0 for value in actions.values()]
         )
 
-        defaut = "Defaut KPI16: le projet {} comporte plusieurs action de type 'Roll'".format(
+        defaut = "Défaut KPI16: le projet {} comporte plusieurs action de type 'Roll'.".format(
             safe_dict_get(projet, ['attributes', 'reference'])
         )
         if roll_count >= 2:
@@ -82,7 +82,7 @@ def controle_1(day):
                 est_corrige=True,
             )
 
-        defaut = "Defaut KPI16: le projet {} ne comporte aucune action de type 'Roll'".format(
+        defaut = "Défaut KPI16: le projet {} ne comporte aucune action de type 'Roll'.".format(
             safe_dict_get(projet, ['attributes', 'reference'])
         )
         if roll_count == 0:
