@@ -51,7 +51,7 @@ def controle_1(day):
 
             if last_prestation_lite["debut"] is not False and \
                     last_prestation_lite["fin"] is not False and \
-                    last_prestation_lite["debut"] <= save_date_convert(day) <= last_prestation_lite["fin"]:
+                    last_prestation_lite["debut"] <= safe_date_convert(day) <= last_prestation_lite["fin"]:
                 last_prestation_lite["en_cours"] = True
             return last_prestation_lite
 
