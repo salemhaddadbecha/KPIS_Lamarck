@@ -1,4 +1,6 @@
 # Modules / Dependances
+from datetime import datetime
+
 from tables import Contacts
 # Tools
 from tools.requests_tools import request, get_list_of_element
@@ -51,15 +53,19 @@ def get_contact_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_contacts(day):
+def check_new_and_update_contacts(start_day, end_day):
     """
     Met à jour et ajoute tous les nouveaux contacts à la table Contacts:
     :param day:
     :return:
     """
     dprint("Update contact table", priority_level=3, preprint="\n")
-    list_of_contacts_to_update = get_list_of_element("/contacts", period="updated", startDate=day,
-                                                     endDate=day)
+    list_of_contacts_to_update = get_list_of_element(
+        "/contacts",
+        period="updated",
+        startDate=start_day,
+        endDate=end_day
+    )
     for contact_to_update_basic_informations in list_of_contacts_to_update:
         contact_to_update_all_informations = get_contact_all_informations(contact_to_update_basic_informations)
 
@@ -72,7 +78,8 @@ def check_new_and_update_contacts(day):
             prenom=contact_to_update_all_informations["prenom"],
             provenance=contact_to_update_all_informations["provenance"],
             detail_provenance=contact_to_update_all_informations["detail_provenance"],
-            date_de_creation=contact_to_update_all_informations["date_de_creation"]
+            date_de_creation=contact_to_update_all_informations["date_de_creation"],
+            derniere_modification=datetime.now().date()
         )
         dprint(
             "Update candidat: {} {}".format(

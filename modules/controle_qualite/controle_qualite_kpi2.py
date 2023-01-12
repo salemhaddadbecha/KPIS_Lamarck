@@ -1,19 +1,20 @@
 # Librairie
+import datetime
 from datetime import timedelta
 
 # Modules / Dependances
 from tables import Controle_qualite
+from tools.database_functions import get_all_candidates
 # Tools
-from tools.requests_tools import get_list_of_element, get_list_of_agencies, request
-from tools.safe_actions import dprint, safe_dict_get, is_in_the_list, safe_update_table_row, safe_date_convert
+from tools.requests_tools import request
+from tools.safe_actions import dprint, safe_dict_get, safe_update_table_row
 
 
-def controle_1(day):
+def controle_1(candidat):
     """
     -	Rapport hebdo sur les consultants en statut Recrute(e) :
         o	Sans provenance
         o	Ou sans commentaire
-    :param day:
     :return:
     """
 
@@ -31,46 +32,38 @@ def controle_1(day):
             :param candidat:
             :return:
             """
-            check = {
-                "provenance": False,
-                "details_provenance": False
-            }
+            result = {'provenance': True, 'details_provenance': True}
+            if str(candidat.provenance_cv) == 'non renseigne' or not candidat.provenance_cv:
+                result['provenance'] = False
 
-            if safe_dict_get(candidat, ["attributes", "source", "typeOf"]) is not None and \
-                    not is_in_the_list([-1, "-1"], safe_dict_get(candidat, ["attributes", "source", "typeOf"])):
-                check["provenance"] = True
+            if not candidat.commentaire_provenance_cv:
+                result['details_provenance'] = False
 
-            if safe_dict_get(candidat, ["attributes", "source", "detail"]) is not None and \
-                    safe_dict_get(candidat, ["attributes", "source", "detail"]) != "":
-                check["details_provenance"] = True
-
-            return check
+            return result
 
         check = _get_candidat_provenance(candidat)
 
         defaut = "Défaut KPI2: Le candidat {} {} est recruté mais aucune provenance du CV n'est renseignée.".format(
-            safe_dict_get(candidat, ["attributes", 'lastName']),
-            safe_dict_get(candidat, ["attributes", 'firstName'])
+            candidat.nom,
+            candidat.prenom
         )
         if not check["provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(candidat, ["id"]),
+                filters={"id_correspondant": candidat.boond_id,
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=day,
+                date_releve=datetime.datetime.now().date().strftime('%Y-%m-%d'),
                 nom_table_correspondante="candidates",
                 est_corrige=False,
-                id_correspondant=safe_dict_get(candidat, ["id"])
+                id_correspondant=candidat.boond_id
             )
-            dprint("[{}] {}".format(
-                safe_dict_get(candidat, ['id']), defaut
-            ), priority_level=4)
+            dprint("[{}] {}".format(candidat.boond_id, defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(candidat, ["id"]),
+                filters={"id_correspondant": candidat.boond_id,
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 est_corrige=True,
@@ -78,44 +71,39 @@ def controle_1(day):
 
         defaut = "Défaut KPI2: Le candidat {} {} est recruté mais aucun détail (champ commentaire) sur sa " \
                  "provenance n'est renseignée.".format(
-            safe_dict_get(candidat, ["attributes", 'lastName']),
-            safe_dict_get(candidat, ["attributes", 'firstName'])
+            candidat.nom,
+            candidat.prenom
         )
         if not check["details_provenance"]:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(candidat, ["id"]),
+                filters={"id_correspondant": candidat.boond_id,
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=day,
+                date_releve=datetime.datetime.now().date().strftime('%Y-%m-%d'),
                 nom_table_correspondante="candidates",
                 est_corrige=False,
-                id_correspondant=safe_dict_get(candidat, ["id"])
+                id_correspondant=candidat.boond_id
             )
-            dprint("[{}] {}".format(
-                safe_dict_get(candidat, ['id']), defaut
-            ), priority_level=4)
+            dprint("[{}] {}".format(candidat.boond_id, defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(candidat, ["id"]),
+                filters={"id_correspondant": candidat.boond_id,
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 est_corrige=True,
             )
 
     # candidateStates=3 -> que en statut recrute
-    for candidat in get_list_of_element("/candidates", candidateStates=3, startDate=day, endDate=day,
-                                        period="updated"):
-        _create_failure(candidat)
+    _create_failure(candidat)
 
 
-def controle_2(day):
+def controle_2(candidat):
     """
     Rapport hebdo sur les consultants qui sont dans la partie Ressources
     mais qui n’ont pas le statut recrute ou base d’import (ou cleanage du stock)
-    :param day:
     :return:
     """
 
@@ -143,7 +131,7 @@ def controle_2(day):
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=day,
+                date_releve=datetime.datetime.now().date().strftime('%Y-%m-%d'),
                 nom_table_correspondante="candidates",
                 est_corrige=False,
                 id_correspondant=safe_dict_get(candidat, ["id"])
@@ -161,16 +149,13 @@ def controle_2(day):
             )
 
     # On reprend tous les candidats sur les 4 derniers mois: duree moyenne de recrutement
-    for candidat in get_list_of_element("/candidates", startDate=safe_date_convert(day) - timedelta(weeks=4 * 4),
-                                        endDate=day, period="updated"):
-        create_failure(candidat)
+    create_failure(candidat)
 
 
-def controle_3(day):
+def controle_3(candidat):
     """
     Rapport hebdo sur les candidats ayant
     comme agence « Lamarck Group » en fonction du type de poste
-    :param day:
     :param agencies:
     :return:
     """
@@ -190,82 +175,71 @@ def controle_3(day):
             :return:
             """
 
-            candidat_id = safe_dict_get(candidat, ["id"])
-
-            if not candidat_id:
-                return None
-
-            candidat_informations = request("/candidates/{}/information".format(candidat_id))
-
-            for included_item in safe_dict_get(candidat_informations, ["included"]):
-                if safe_dict_get(included_item, ["type"]).upper() != "AGENCY":
-                    continue
-                return safe_dict_get(included_item, ["attributes", "name"])
-
-            return None
+            return candidat.agence
 
         candidat_agency = get_candidat_agency(candidat)
 
         defaut = "Défaut KPI2: Le candidat {} {} est lié à 'Lamarck Group'.".format(
-            safe_dict_get(candidat, ["attributes", 'lastName']),
-            safe_dict_get(candidat, ["attributes", 'firstName'])
+            candidat.nom,
+            candidat.prenom
         )
-        if candidat_agency == "Lamarck Group":
+        if str(candidat_agency) == "Lamarck Group":
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(candidat, ["id"]),
+                filters={"id_correspondant": candidat.boond_id,
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=day,
+                date_releve=datetime.datetime.now().date().strftime('%Y-%m-%d'),
                 nom_table_correspondante="candidates",
                 est_corrige=False,
-                id_correspondant=safe_dict_get(candidat, ["id"])
+                id_correspondant=candidat.boond_id
             )
-            dprint("[{}] {}".format(
-                safe_dict_get(candidat, ['id']), defaut
-            ), priority_level=4)
+            dprint("[{}] {}".format(candidat.boond_id, defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(candidat, ["id"]),
+                filters={"id_correspondant": candidat.boond_id,
                          "nom_table_correspondante": "candidates",
                          "defaut": defaut},
                 est_corrige=True,
             )
 
-    for candidat in get_list_of_element("/candidates", startDate=day, endDate=day, period="updated"):
-        create_failure(candidat)
+    create_failure(candidat)
 
 
-def controle_qualite_kpi2(day):
+def controle_qualite_kpi2():
     """
     Controle qualite KPI2
-    :param day:
     :return:
     """
-
+    candidates = get_all_candidates()
     # Point de controle 1:
     """
     -	Rapport hebdo sur les consultants en statut Recrute(e) :
         o	Sans provenance
         o	Ou sans commentaire
     """
-    dprint("KPI2: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(day)
+    for candidate in candidates:
+        if not candidate.recrute:
+            continue
 
-    # Point de controle 2:
-    """
-    Rapport hebdo sur les consultants qui sont dans la partie Ressources 
-    mais qui n’ont pas le statut recrute ou base d’import (ou cleanage du stock)
-    """
-    dprint("KPI2: controle qualite 2", priority_level=3, preprint="\n")
-    controle_2(day)
+        dprint("KPI2: controle qualite 1", priority_level=3, preprint="\n")
+        controle_1(candidate)
 
-    # Point de controle 3
-    """
-    Rapport hebdo sur les candidats ayant 
-    comme agence « Lamarck Group » en fonction du type de poste
-    """
-    dprint("KPI2: controle qualite 3", priority_level=3, preprint="\n")
-    controle_3(day)
+        # Point de controle 2:
+        """
+        Rapport hebdo sur les consultants qui sont dans la partie Ressources 
+        mais qui n’ont pas le statut recrute ou base d’import (ou cleanage du stock)
+        """
+        # dprint("KPI2: controle qualite 2", priority_level=3, preprint="\n")
+        # controle_2(candidates)
+        # ToDo:find a way to make this kpi possible
+
+        # Point de controle 3
+        """
+        Rapport hebdo sur les candidats ayant 
+        comme agence « Lamarck Group » en fonction du type de poste
+        """
+        dprint("KPI2: controle qualite 3", priority_level=3, preprint="\n")
+        controle_3(candidate)

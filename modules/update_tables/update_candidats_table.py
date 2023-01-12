@@ -53,7 +53,7 @@ def get_candidate_all_informations(basic_data):
         "entretien_3": bool(),
         "signature": bool()
     }
-
+    agency = ''
     informations["boond_id"] = safe_dict_get(basic_data, ["id"])
     informations["boond_rm_id"] = safe_dict_get(basic_data, ["relationships", "mainManager", "data", "id"])
     informations["nom"] = safe_dict_get(basic_data, ["attributes", "lastName"])
@@ -69,6 +69,12 @@ def get_candidate_all_informations(basic_data):
     informations["recrute"] = (safe_dict_get(basic_data, ["attributes", "state"]) == etape_recrute)
     if informations["recrute"] is not None:
         details_candidat = request("/candidates/{}/information".format(informations['boond_id']))
+
+        for item in safe_dict_get(details_candidat, ['included']) or []:
+            if safe_dict_get(item, ["type"]) == "agency":
+                agency = safe_dict_get(item, ["attributes", "name"])
+                break
+
         informations["boond_ressource_id"] = safe_dict_get(details_candidat,
                                                            ["data", "relationships", "resource", "data", "id"])
     else:
@@ -109,18 +115,24 @@ def get_candidate_all_informations(basic_data):
     if safe_count_type_of_dict_in_list(liste_des_actions, ["attributes", "typeOf"], action_signature) > 0:
         informations["signature"] = True
 
+    informations['agence'] = agency
+
     return informations
 
 
-def check_new_and_update_candidates(day):
+def check_new_and_update_candidates(start_day, end_day):
     """
     Met à jour et ajoute tous les nouveaux candidats à la table Candidats:
     :param day:
     :return:
     """
     dprint("Update candidates table", priority_level=3, preprint="\n")
-    list_of_candidates_to_update = get_list_of_element("/candidates", period="updated", startDate=day,
-                                                       endDate=day)
+    list_of_candidates_to_update = get_list_of_element(
+        "/candidates",
+        period="updated",
+        startDate=start_day,
+        endDate=end_day
+    )
 
     for candidate_to_update_basic_informations in list_of_candidates_to_update:
         candidate_to_update_all_informations = get_candidate_all_informations(candidate_to_update_basic_informations)
@@ -142,7 +154,8 @@ def check_new_and_update_candidates(day):
             entretien_1=candidate_to_update_all_informations["entretien_1"],
             entretien_2=candidate_to_update_all_informations["entretien_2"],
             entretien_3=candidate_to_update_all_informations["entretien_3"],
-            signature=candidate_to_update_all_informations["signature"]
+            signature=candidate_to_update_all_informations["signature"],
+            agence=candidate_to_update_all_informations["agence"]
         )
 
         dprint(

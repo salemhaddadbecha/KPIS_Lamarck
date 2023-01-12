@@ -1,23 +1,22 @@
 # Modules / Dependances
+import datetime
+
 from tables import Controle_qualite
-# Tools
-from tools.requests_tools import request, get_list_of_element
-from tools.safe_actions import safe_dict_get, safe_update_table_row, dprint
+from tools.database_functions import get_all_resources
+from tools.safe_actions import safe_update_table_row, dprint
 
 
-def controle_1(day):
+def controle_1(resource):
     """
     Existence pour tous les consultants d’au
     moins une ligne dans le bloc Ressources > Administratif > Contrat RH
-    :param day:
     :return:
     """
 
-    def _create_failure(resource, day):
+    def _create_failure(resource):
         """
         Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param resource:
-        :param day:
         :return:
         """
 
@@ -27,58 +26,48 @@ def controle_1(day):
             :param resource:
             :return:
             """
-            check = False
-            administrative = request("/resources/{}/administrative".format(safe_dict_get(resource, ['id'])))
-
-            if safe_dict_get(administrative, ["data", "relationships", "contracts", "data"]) is not None and \
-                    len(safe_dict_get(administrative, ["data", "relationships", "contracts", "data"])) > 0:
-                check = True
-
-            return check
+            return True if resource.date_de_recrutement else False
 
         defaut = "Défaut KPI3: Aucun contrat RH n'est renseigné sur la ressource {} {}.".format(
-            safe_dict_get(resource, ["attributes", 'lastName']),
-            safe_dict_get(resource, ["attributes", 'firstName']),
+            resource.nom,
+            resource.prenom,
         )
         if not _get_hr_contract(resource):
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(resource, ["id"]),
+                filters={"id_correspondant": resource.boond_id,
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=day,
+                date_releve=datetime.datetime.now().date().strftime('%Y-%m-%d'),
                 nom_table_correspondante="ressources",
                 est_corrige=False,
-                id_correspondant=safe_dict_get(resource, ["id"])
+                id_correspondant=resource.boond_id
             )
-            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
+            dprint("[{}] {}".format(resource.boond_id, defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(resource, ["id"]),
+                filters={"id_correspondant": resource.boond_id,
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 est_corrige=True,
             )
 
-    for resource in get_list_of_element("/resources", startDate=day, endDate=day, period="updated"):
-        _create_failure(resource, day)
+    _create_failure(resource)
 
 
-def controle_2(day):
+def controle_2(resource):
     """
     Mettre à jour l’ensemble des titres de profils Ressources pour standardiser
     les titres avec le profil du consultant
-    :param day:
     :return:
     """
 
-    def _create_failure(resource, day):
+    def _create_failure(resource):
         """
         Cree ou non (en fonction des consignes de controle) un releve de defaut dans la table Controle qualite
         :param resource:
-        :param day:
         :return:
         """
         liste_titre_autorise = [
@@ -107,57 +96,56 @@ def controle_2(day):
             'Lamarck Institute',
             'Responsable des ressources humaines',
         ]
-        title = safe_dict_get(resource, ["attributes", "title"])
+
 
         defaut = "Défaut KPI3: Le titre de la ressource {} {} est non conforme : '{}'.".format(
-            safe_dict_get(resource, ["attributes", 'lastName']),
-            safe_dict_get(resource, ["attributes", 'firstName']),
-            title)
-        if title not in liste_titre_autorise:
+            resource.nom,
+            resource.prenom,
+            resource.profil)
+        if resource.profil not in liste_titre_autorise:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(resource, ["id"]),
+                filters={"id_correspondant": resource.boond_id,
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 defaut=defaut,
-                date_releve=day,
+                date_releve=datetime.datetime.now().date().strftime('%Y-%m-%d'),
                 nom_table_correspondante="ressources",
                 est_corrige=False,
-                id_correspondant=safe_dict_get(resource, ["id"])
+                id_correspondant=resource.boond_id
             )
-            dprint("[{}] {}".format(safe_dict_get(resource, ['id']), defaut), priority_level=4)
+            dprint("[{}] {}".format(resource.boond_id, defaut), priority_level=4)
         else:
             safe_update_table_row(
                 table=Controle_qualite,
-                filters={"id_correspondant": safe_dict_get(resource, ["id"]),
+                filters={"id_correspondant": resource.boond_id,
                          "nom_table_correspondante": "ressources",
                          "defaut": defaut},
                 est_corrige=True,
             )
 
-    for resource in get_list_of_element("/resources", startDate=day, endDate=day, period="updated"):
-        _create_failure(resource, day)
+    _create_failure(resource)
 
 
-def controle_qualite_kpi3(day):
+def controle_qualite_kpi3():
     """
     Controle qualite KPI3
-    :param day:
     :return:
     """
+    resources = get_all_resources()
+    for resource in resources:
+        # Point de controle 1:
+        """
+        Existence pour tous les consultants d’au
+        moins une ligne dans le bloc Ressources > Administratif > Contrat RH
+        """
+        dprint("KPI3: controle qualite 1", priority_level=3, preprint="\n")
+        controle_1(resource)
 
-    # Point de controle 1:
-    """
-    Existence pour tous les consultants d’au
-    moins une ligne dans le bloc Ressources > Administratif > Contrat RH
-    """
-    dprint("KPI3: controle qualite 1", priority_level=3, preprint="\n")
-    controle_1(day)
-
-    # Point de controle 2:
-    """
-    Mettre à jour l’ensemble des titres de profils Ressources pour standardiser 
-    les titres avec le profil du consultant
-    """
-    dprint("KPI3: controle qualite 2", priority_level=3, preprint="\n")
-    controle_2(day)
+        # Point de controle 2:
+        """
+        Mettre à jour l’ensemble des titres de profils Ressources pour standardiser 
+        les titres avec le profil du consultant
+        """
+        dprint("KPI3: controle qualite 2", priority_level=3, preprint="\n")
+        controle_2(resource)

@@ -32,7 +32,8 @@ def request(endpoint, **query_params):
         try:
             response = requests.get(APP_CONFIG.BOONDMANAGER_API_URL + param,
                                     auth=HTTPBasicAuth(APP_CONFIG.BOONDMANAGER_API_LOGIN,
-                                                       APP_CONFIG.BOONDMANAGER_API_PASSWORD))
+                                                       APP_CONFIG.BOONDMANAGER_API_PASSWORD),
+                                    timeout=1000000)
             if response.ok:
                 response = json.loads(response.text)
                 break
@@ -42,7 +43,8 @@ def request(endpoint, **query_params):
             sleep(5)
             response = requests.get(APP_CONFIG.BOONDMANAGER_API_URL + param,
                                     auth=HTTPBasicAuth(APP_CONFIG.BOONDMANAGER_API_LOGIN,
-                                                       APP_CONFIG.BOONDMANAGER_API_PASSWORD))
+                                                       APP_CONFIG.BOONDMANAGER_API_PASSWORD),
+                                    timeout=1000000)
             if response.ok:
                 response = json.loads(response.text)
                 break

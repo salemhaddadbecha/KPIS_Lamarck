@@ -19,6 +19,7 @@ class Candidats(Base):
     entretien_2 = Column(Boolean)
     entretien_3 = Column(Boolean)
     signature = Column(Boolean)
+    agence = Column(String)
     # RelationShip(s)
     boond_rm_id = Column(Integer)
     boond_ressource_id = Column(Integer)
@@ -38,6 +39,8 @@ class Ressources(Base):
     type = Column(String)
     est_rm = Column(Boolean)
     date_de_recrutement = Column(Date)
+    debut_derniere_prestation = Column(Date)
+    fin_derniere_prestation = Column(Date)
     # RelationShip(s)
     boond_rm_id = Column(Integer)
 
@@ -91,6 +94,7 @@ class Contacts(Base):
     detail_provenance = Column(String)
     # RelationShip(s)
     boond_rm_id = Column(Integer)
+    derniere_modification = Column(Date)
 
 class Actions(Base):
     __tablename__ = 'actions'
@@ -126,3 +130,14 @@ class Controle_qualite(Base):
     # RelationShip(s)
     nom_table_correspondante = Column(String)
     id_correspondant = Column(Integer)
+
+class AllActions(Base):
+    __tablename__ = 'all_actions'
+    id = Column(Integer, primary_key=True)
+    boond_id = Column(Integer)
+    # Attributs
+    date_de_creation = Column(Date)
+    table_associee = Column(String)
+    type = Column(String)
+    # RelationShip(s)
+    boond_id_element_associe = Column(Integer)

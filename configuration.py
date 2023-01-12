@@ -20,15 +20,15 @@ class BaseConfig(object):
     APPLICATION_NAME = 'kpis'
     DEBUG = 1
     BASE_DIR = BASE_DIR
-    INTERVAL_START = '2021-10-19'
-    INTERVAL_END = '2022-10-28'
+    INTERVAL_START = '2017-11-01'
+    INTERVAL_END = '2022-11-18'
 
 
 class ProductionConfig(BaseConfig):
     ENV = "production"
     DEBUG = 1
     PRIORITY_DEBUG_LEVEL = 10
-    MULTI_THREADING = "soft"# no | "soft" | "hard"
+    MULTI_THREADING = "no"# no | "soft" | "hard"
     BOONDMANAGER_API_URL = SECRET_CONFIG_STORE["boondManager_api_url"]
     BOONDMANAGER_API_LOGIN = SECRET_CONFIG_STORE["boondManager_api_login"]
     BOONDMANAGER_API_PASSWORD = SECRET_CONFIG_STORE["boondManager_api_password"]

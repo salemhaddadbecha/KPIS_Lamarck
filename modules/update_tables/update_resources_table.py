@@ -42,6 +42,8 @@ def get_resource_all_informations(basic_data, list_of_agencies):
         "type": str(),
         "est_rm": bool(),
         "date_de_recrutement": None,
+        "debut_derniere_prestation": None,
+        "fin_derniere_prestation": None,
     }
 
     informations["boond_id"] = safe_dict_get(basic_data, ["id"])
@@ -77,6 +79,11 @@ def get_resource_all_informations(basic_data, list_of_agencies):
 
     # Pour avoir la date de recrutement, il faut faire une requête de plus
     administrative_informations = request("/resources/{}/administrative".format(informations['boond_id']))
+    resource_prestations = request("/resources/{}/deliveries-inactivities".format(informations['boond_id']))
+    if safe_dict_get(resource_prestations, ['data']) and len(safe_dict_get(resource_prestations, ['data'])) > 0:
+        last_prestation = safe_dict_get(resource_prestations, ['data'])[0]
+        informations["debut_derniere_prestation"] = safe_dict_get(last_prestation, ['attributes', 'startDate'])
+        informations["fin_derniere_prestation"] = safe_dict_get(last_prestation, ['attributes', 'endDate'])
     debut_premier_contrat = None
     if safe_dict_get(administrative_informations, ["data", "relationships", "contracts", "data", -1, "id"]):
         id_premier_contrat = safe_dict_get(administrative_informations,
@@ -89,7 +96,7 @@ def get_resource_all_informations(basic_data, list_of_agencies):
     return informations
 
 
-def check_new_and_update_resources(day):
+def check_new_and_update_resources(start_day, end_day):
     """
     Met à jour et ajoute toutes les nouvelles ressources à la table Ressources:
     :param day:
@@ -98,8 +105,12 @@ def check_new_and_update_resources(day):
     list_of_agencies = get_list_of_agencies()
 
     dprint("Update resource table", priority_level=3, preprint="\n")
-    list_of_resources_to_update = get_list_of_element("/resources", period="updated", startDate=day,
-                                                      endDate=day)
+    list_of_resources_to_update = get_list_of_element(
+        "/resources",
+        period="updated",
+        startDate=start_day,
+        endDate=end_day
+    )
 
     for resource_to_update_basic_informations in list_of_resources_to_update:
         resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations,
@@ -119,7 +130,9 @@ def check_new_and_update_resources(day):
             profil=resource_to_update_all_informations["profil"],
             type=resource_to_update_all_informations["type"],
             est_rm=resource_to_update_all_informations["est_rm"],
-            date_de_recrutement=resource_to_update_all_informations["date_de_recrutement"]
+            date_de_recrutement=resource_to_update_all_informations["date_de_recrutement"],
+            debut_derniere_prestation=resource_to_update_all_informations["debut_derniere_prestation"],
+            fin_derniere_prestation=resource_to_update_all_informations["fin_derniere_prestation"],
         )
         dprint(
             "Update resource: {} {}".format(

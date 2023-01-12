@@ -29,15 +29,19 @@ def get_projet_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_projets(day):
+def check_new_and_update_projets(start_day, end_day):
     """
     Met à jour et ajoute tous les nouveaux projets à la table Projets:
     :param day:
     :return:
     """
     dprint("Update project table", priority_level=3, preprint="\n")
-    list_of_projets_to_update = get_list_of_element("/projects", period="updated", startDate=day,
-                                                    endDate=day)
+    list_of_projets_to_update = get_list_of_element(
+        "/projects",
+        period="updated",
+        startDate=start_day,
+        endDate=end_day
+    )
 
     for projet_to_update_basic_informations in list_of_projets_to_update:
         projet_to_update_all_informations = get_projet_all_informations(projet_to_update_basic_informations)

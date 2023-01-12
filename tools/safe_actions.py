@@ -134,13 +134,15 @@ def safe_update_table_row(table, filters, **params):
             if len(result) > 1:
                 for row in result[1:]:
                     session.delete(row)
+                    del result[1]
 
             # Si une row est trouvée (forcément une unique) alors on l'update
             if len(result) == 1:
                 for key, value in params.items():
                     try:
-                        row.update({getattr(table, key): value})
+                        setattr(result[0], key, value)
                     except:
+                        print('ERROR !!!!')
                         pass
 
             # Sinon on crée la ligne

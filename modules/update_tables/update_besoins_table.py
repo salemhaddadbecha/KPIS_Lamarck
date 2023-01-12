@@ -54,15 +54,19 @@ def get_besoin_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_besoins(day):
+def check_new_and_update_besoins(start_day, end_day):
     """
     Met à jour et ajoute tous les nouveaux besoins à la table Besoins:
     :param day:
     :return:
     """
     dprint("Update besoin table", priority_level=3, preprint="\n")
-    list_of_besoins_to_update = get_list_of_element("/opportunities", period="updated", startDate=day,
-                                                    endDate=day)
+    list_of_besoins_to_update = get_list_of_element(
+        "/opportunities",
+        period="updated",
+        startDate=start_day,
+        endDate=end_day
+    )
 
     for besoin_to_update_basic_informations in list_of_besoins_to_update:
         besoin_to_update_all_informations = get_besoin_all_informations(besoin_to_update_basic_informations)

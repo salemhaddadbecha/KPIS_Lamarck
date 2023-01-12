@@ -68,15 +68,19 @@ def get_prestation_all_informations(basic_data):
     return informations
 
 
-def check_new_and_update_prestations(day):
+def check_new_and_update_prestations(start_day, end_day):
     """
     Met à jour et ajoute toutes les nouvelles prestations à la table Prestations:
     :param day:
     :return:
     """
     dprint("Update prestation table", priority_level=3, preprint="\n")
-    list_of_prestations_to_update = get_list_of_element("/deliveries-groupments", period="updated",
-                                                        startDate=day, endDate=day)
+    list_of_prestations_to_update = get_list_of_element(
+        "/deliveries-groupments",
+        period="updated",
+        startDate=start_day,
+        endDate=end_day
+    )
 
     for prestation_to_update_basic_informations in list_of_prestations_to_update:
         prestation_to_update_all_informations = get_prestation_all_informations(prestation_to_update_basic_informations)
