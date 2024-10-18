@@ -5,6 +5,9 @@ BASE_DIR = os.path.dirname(os.path.realpath(__file__))
 SECRET_FILE_PATH = 'secrets.json'
 SECRET_CONFIG_STORE = {}
 
+"""Command to copy local file to EC2 instance"""
+# scp -i  C:\Users\salem\PycharmProjects\kpis\kpisinstance.pem -r  C:\Users\salem\PycharmProjects\kpis ec2- user@98.80.249.215:/home/ec2-user
+
 try:
     with open(SECRET_FILE_PATH) as config:
         SECRET_CONFIG_STORE = json.load(config)
@@ -20,8 +23,8 @@ class BaseConfig(object):
     APPLICATION_NAME = 'kpis'
     DEBUG = 1
     BASE_DIR = BASE_DIR
-    INTERVAL_START = '2017-11-01'
-    INTERVAL_END = '2022-11-18'
+    INTERVAL_START = '2024-09-28'
+    INTERVAL_END = '2024-10-05'
 
 
 class ProductionConfig(BaseConfig):

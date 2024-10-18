@@ -1,5 +1,4 @@
 from sqlalchemy import Column, String, Integer, Boolean, Date, Float
-from sqlalchemy.orm import relationship
 from connectors.database_connectors import Base
 
 class Candidats(Base):
@@ -67,6 +66,8 @@ class Projets(Base):
     # RelationShip(s)
     boond_rm_id = Column(Integer)
     boond_besoin_id = Column(Integer)
+    #New comany name column
+    company_name = Column(String)
 
 class Prestations(Base):
     __tablename__ = 'prestations'

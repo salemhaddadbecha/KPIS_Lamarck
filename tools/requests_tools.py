@@ -73,6 +73,7 @@ def get_list_of_element(endpoint, **params):
     :return: reponse de la requête au format dict()
     """
     page = 1
+    response_data = {}
     list_of_elements = []
     while True:
         params["maxResults"] = 500
@@ -82,7 +83,11 @@ def get_list_of_element(endpoint, **params):
         dprint("Page number: {}".format(page), priority_level=5)
         if elements and len(safe_dict_get(elements, ["data"])) > 0:
             list_of_elements += safe_dict_get(elements, ["data"])
+            if 'included' in elements:
+                response_data['included'] = response_data.get('included', []) + safe_dict_get(elements, ["included"])
+
             page += 1
         else:
             break
-    return list_of_elements
+        response_data['data'] = list_of_elements
+    return response_data

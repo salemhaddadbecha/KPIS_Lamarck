@@ -117,6 +117,8 @@ def controle_qualite_kpi16():
     if not projects:
         return
     projects_actions = get_projects_actions_as_dict()
+    print(projects_actions)
+
     # Point de controle 1:
     """
     -   Tous les projets qui n’ont pas d’action d’un des 3 types

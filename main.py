@@ -18,24 +18,25 @@ from modules.controle_qualite.controle_qualite_kpi12 import controle_qualite_kpi
 from modules.controle_qualite.controle_qualite_kpi16 import controle_qualite_kpi16
 
 
-start_date = datetime.now().date().strftime('%Y-%m-%d')
-end_date = (datetime.now().date() - timedelta(days=7)).strftime('%Y-%m-%d')
+end_date = datetime.now().date().strftime('%Y-%m-%d')
+start_date = (datetime.now().date() - timedelta(days=7)).strftime('%Y-%m-%d')
+#start_date = '2016-10-16'
 
 # Update database
-check_new_and_update_candidates(start_day=start_date, end_day=end_date)
-check_new_and_update_resources(start_day=start_date, end_day=end_date)
-check_new_and_update_besoins(start_day=start_date, end_day=end_date)
+# check_new_and_update_candidates(start_day=start_date, end_day=end_date)
+# check_new_and_update_resources(start_day=start_date, end_day=end_date)
+# check_new_and_update_besoins(start_day=start_date, end_day=end_date)
 check_new_and_update_projets(start_day=start_date, end_day=end_date)
-check_new_and_update_temps(start_day=start_date, end_day=end_date)
-check_new_and_update_prestations(start_day=start_date, end_day=end_date)
-check_new_and_update_contacts(start_day=start_date, end_day=end_date)
-check_new_and_update_actions(start_day=start_date, end_day=end_date)
-check_new_and_update_all_actions(start_day=start_date, end_day=end_date)
+# check_new_and_update_temps(start_day=start_date, end_day=end_date)
+# check_new_and_update_prestations(start_day=start_date, end_day=end_date)
+# check_new_and_update_contacts(start_day=start_date, end_day=end_date)
+# check_new_and_update_actions(start_day=start_date, end_day=end_date)
+# check_new_and_update_all_actions(start_day=start_date, end_day=end_date)
 
 # Calculate KPIs
-controle_qualite_kpi1()
-controle_qualite_kpi2()
-controle_qualite_kpi3()
-controle_qualite_kpi8()
-controle_qualite_kpi12()
+# controle_qualite_kpi1()
+# controle_qualite_kpi2()
+# controle_qualite_kpi3()
+# controle_qualite_kpi8()
+# controle_qualite_kpi12()
 controle_qualite_kpi16()
