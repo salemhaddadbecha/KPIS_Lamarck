@@ -25,15 +25,15 @@ start_date = (datetime.now().date() - timedelta(days=30)).strftime('%Y-%m-%d')
 #start_date = '2016-10-16'
 
 # Update database
-#check_new_and_update_candidates(start_day=start_date, end_day=end_date)
-#check_new_and_update_resources(start_day=start_date, end_day=end_date)
-#check_new_and_update_besoins(start_day=start_date, end_day=end_date)
-#check_new_and_update_projets(start_day=start_date, end_day=end_date)
-#check_new_and_update_temps(start_day=start_date, end_day=end_date)
-#check_new_and_update_prestations(start_day=start_date, end_day=end_date)
-# #check_new_and_update_contacts(start_day=start_date, end_day=end_date)
-# check_new_and_update_actions(start_day=start_date, end_day=end_date)
-# check_new_and_update_all_actions(start_day=start_date, end_day=end_date)
+check_new_and_update_candidates(start_day=start_date, end_day=end_date)
+check_new_and_update_resources(start_day=start_date, end_day=end_date)
+check_new_and_update_besoins(start_day=start_date, end_day=end_date)
+check_new_and_update_projets(start_day=start_date, end_day=end_date)
+check_new_and_update_temps(start_day=start_date, end_day=end_date)
+check_new_and_update_prestations(start_day=start_date, end_day=end_date)
+check_new_and_update_contacts(start_day=start_date, end_day=end_date)
+check_new_and_update_actions(start_day=start_date, end_day=end_date)
+check_new_and_update_all_actions(start_day=start_date, end_day=end_date)
 check_new_and_update_company(start_date,end_date)
 
 
