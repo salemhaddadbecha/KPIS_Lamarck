@@ -59,7 +59,7 @@ def check_new_and_update_temps(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
-    for temps in list_of_new_temps:
+    for temps in list_of_new_temps['data']:
 
         if safe_dict_get(temps, ["attributes", "value"]) is not None and \
                 float(safe_dict_get(temps, ["attributes", "value"])) != float(0):

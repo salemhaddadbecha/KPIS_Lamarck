@@ -68,7 +68,7 @@ def check_new_and_update_besoins(start_day, end_day):
         endDate=end_day
     )
 
-    for besoin_to_update_basic_informations in list_of_besoins_to_update:
+    for besoin_to_update_basic_informations in list_of_besoins_to_update['data']:
         besoin_to_update_all_informations = get_besoin_all_informations(besoin_to_update_basic_informations)
 
         safe_update_table_row(

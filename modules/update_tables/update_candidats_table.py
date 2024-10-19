@@ -134,7 +134,7 @@ def check_new_and_update_candidates(start_day, end_day):
         endDate=end_day
     )
 
-    for candidate_to_update_basic_informations in list_of_candidates_to_update:
+    for candidate_to_update_basic_informations in list_of_candidates_to_update['data']:
         candidate_to_update_all_informations = get_candidate_all_informations(candidate_to_update_basic_informations)
 
         safe_update_table_row(

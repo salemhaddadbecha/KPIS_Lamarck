@@ -19,13 +19,17 @@ def get_projet_all_informations(basic_data, included_data):
         "boond_besoin_id": int(),
         "date_de_debut": None,
         "date_de_fin": None,
-        "company_name": None  # Add company name to be fetched
+        "company_name": None,  # Add company name to be fetched
+        "company_id": None
     }
     informations["boond_id"] = safe_dict_get(basic_data, ["id"])
     informations["boond_rm_id"] = safe_dict_get(basic_data, ["relationships", "mainManager", "data", "id"])
     informations["boond_besoin_id"] = safe_dict_get(basic_data, ["relationships", "opportunity", "data", "id"])
+    informations["company_id"] = safe_dict_get(basic_data, ["relationships", "company", "data", "id"])
     informations["date_de_debut"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "startDate"]))
     informations["date_de_fin"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "endDate"]))
+
+
 
     # Retrieve the company ID from basic_data
     company_id = safe_dict_get(basic_data, ["relationships", "company", "data", "id"])
@@ -70,6 +74,7 @@ def check_new_and_update_projets(start_day, end_day):
             boond_besoin_id=projet_to_update_all_informations["boond_besoin_id"],
             date_de_debut=projet_to_update_all_informations["date_de_debut"],
             date_de_fin=projet_to_update_all_informations["date_de_fin"],
-            company_name=projet_to_update_all_informations["company_name"]  # Include the company name
+            company_name=projet_to_update_all_informations["company_name"],  # Include the company name
+            company_id = projet_to_update_all_informations["company_id"]
         )
         dprint("Update project: {}".format(projet_to_update_all_informations['boond_id']), priority_level=4)

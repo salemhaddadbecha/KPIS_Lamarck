@@ -112,7 +112,7 @@ def check_new_and_update_resources(start_day, end_day):
         endDate=end_day
     )
 
-    for resource_to_update_basic_informations in list_of_resources_to_update:
+    for resource_to_update_basic_informations in list_of_resources_to_update['data']:
         resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations,
                                                                             list_of_agencies)
 

@@ -82,7 +82,7 @@ def check_new_and_update_prestations(start_day, end_day):
         endDate=end_day
     )
 
-    for prestation_to_update_basic_informations in list_of_prestations_to_update:
+    for prestation_to_update_basic_informations in list_of_prestations_to_update['data']:
         prestation_to_update_all_informations = get_prestation_all_informations(prestation_to_update_basic_informations)
 
         safe_update_table_row(

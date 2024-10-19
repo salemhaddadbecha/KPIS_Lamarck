@@ -66,7 +66,7 @@ def check_new_and_update_contacts(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
-    for contact_to_update_basic_informations in list_of_contacts_to_update:
+    for contact_to_update_basic_informations in list_of_contacts_to_update['data']:
         contact_to_update_all_informations = get_contact_all_informations(contact_to_update_basic_informations)
 
         safe_update_table_row(

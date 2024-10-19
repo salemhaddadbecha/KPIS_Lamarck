@@ -74,7 +74,7 @@ def check_new_and_update_actions_with_param(start_day, end_day, filter):
     list_of_actions_to_update = get_list_of_element("/actions", period="updated", actionTypes=filter,
                                                     startDate=start_day, endDate=end_day)
 
-    for action_to_update_basic_informations in list_of_actions_to_update:
+    for action_to_update_basic_informations in list_of_actions_to_update['data']:
         action_to_update_all_informations = get_action_all_informations(action_to_update_basic_informations)
 
         safe_update_table_row(

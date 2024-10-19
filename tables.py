@@ -68,6 +68,18 @@ class Projets(Base):
     boond_besoin_id = Column(Integer)
     #New comany name column
     company_name = Column(String)
+    company_id = Column(Integer)
+
+
+class Company(Base):
+    __tablename__ = 'company'
+    id = Column(Integer, primary_key=True)
+    boond_id = Column(Integer)
+    boond_rm_id = Column(Integer)
+    company_name = Column(String)
+    country = Column(String)
+    phone = Column(String)
+
 
 class Prestations(Base):
     __tablename__ = 'prestations'
