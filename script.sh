@@ -1,5 +1,7 @@
 mkdir logs
 
+chmod 755 /home/ec2-user/kpis/logs
+
 crontab -e
 */5 * * * * ENV=production /usr/bin/python3 /home/ec2-user/kpis/main.py >> /home/ec2-user/kpis/logs/logfile_$(date +\%Y\%m\%d_\%H\%M\%S).log 2>&1
 
