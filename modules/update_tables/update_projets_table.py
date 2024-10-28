@@ -61,20 +61,22 @@ def check_new_and_update_projets(start_day, end_day):
     )
 
     included_data = list_of_projets_to_update.get('included', [])
+    if 'data' in list_of_projets_to_update and list_of_projets_to_update['data']:
+        for projet in list_of_projets_to_update['data']:
+            projet_to_update_all_informations = get_projet_all_informations(projet, included_data)  # Pass included data
 
-    for projet in list_of_projets_to_update['data']:
-        projet_to_update_all_informations = get_projet_all_informations(projet, included_data)  # Pass included data
-
-        # Update the database with the new information, including the company name
-        safe_update_table_row(
-            table=Projets,
-            filters={"boond_id": projet_to_update_all_informations["boond_id"]},
-            boond_id=projet_to_update_all_informations["boond_id"],
-            boond_rm_id=projet_to_update_all_informations["boond_rm_id"],
-            boond_besoin_id=projet_to_update_all_informations["boond_besoin_id"],
-            date_de_debut=projet_to_update_all_informations["date_de_debut"],
-            date_de_fin=projet_to_update_all_informations["date_de_fin"],
-            company_name=projet_to_update_all_informations["company_name"],  # Include the company name
-            company_id = projet_to_update_all_informations["company_id"]
-        )
-        dprint("Update project: {}".format(projet_to_update_all_informations['boond_id']), priority_level=4)
+            # Update the database with the new information, including the company name
+            safe_update_table_row(
+                table=Projets,
+                filters={"boond_id": projet_to_update_all_informations["boond_id"]},
+                boond_id=projet_to_update_all_informations["boond_id"],
+                boond_rm_id=projet_to_update_all_informations["boond_rm_id"],
+                boond_besoin_id=projet_to_update_all_informations["boond_besoin_id"],
+                date_de_debut=projet_to_update_all_informations["date_de_debut"],
+                date_de_fin=projet_to_update_all_informations["date_de_fin"],
+                company_name=projet_to_update_all_informations["company_name"],  # Include the company name
+                company_id = projet_to_update_all_informations["company_id"]
+            )
+            dprint("Update project: {}".format(projet_to_update_all_informations['boond_id']), priority_level=4)
+    else:
+        dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)

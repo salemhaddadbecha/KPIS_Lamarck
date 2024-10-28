@@ -82,18 +82,22 @@ def check_new_and_update_prestations(start_day, end_day):
         endDate=end_day
     )
 
-    for prestation_to_update_basic_informations in list_of_prestations_to_update['data']:
-        prestation_to_update_all_informations = get_prestation_all_informations(prestation_to_update_basic_informations)
+    if 'data' in list_of_prestations_to_update and list_of_prestations_to_update['data']:
 
-        safe_update_table_row(
-            table=Prestations,
-            filters={"boond_id": prestation_to_update_all_informations["boond_id"]},
-            boond_id=prestation_to_update_all_informations["boond_id"],
-            boond_resource_id=prestation_to_update_all_informations["boond_resource_id"],
-            date_de_debut=prestation_to_update_all_informations["date_de_debut"],
-            date_de_fin=prestation_to_update_all_informations["date_de_fin"],
-            etat=prestation_to_update_all_informations["etat"]
-        )
-        dprint("Update candidat: {}".format(
-            prestation_to_update_all_informations['boond_id']
-        ), priority_level=4)
+        for prestation_to_update_basic_informations in list_of_prestations_to_update['data']:
+            prestation_to_update_all_informations = get_prestation_all_informations(prestation_to_update_basic_informations)
+
+            safe_update_table_row(
+                table=Prestations,
+                filters={"boond_id": prestation_to_update_all_informations["boond_id"]},
+                boond_id=prestation_to_update_all_informations["boond_id"],
+                boond_resource_id=prestation_to_update_all_informations["boond_resource_id"],
+                date_de_debut=prestation_to_update_all_informations["date_de_debut"],
+                date_de_fin=prestation_to_update_all_informations["date_de_fin"],
+                etat=prestation_to_update_all_informations["etat"]
+            )
+            dprint("Update candidat: {}".format(
+                prestation_to_update_all_informations['boond_id']
+            ), priority_level=4)
+    else:
+            dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)

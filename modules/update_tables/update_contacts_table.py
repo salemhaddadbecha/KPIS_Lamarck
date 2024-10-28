@@ -66,24 +66,27 @@ def check_new_and_update_contacts(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
-    for contact_to_update_basic_informations in list_of_contacts_to_update['data']:
-        contact_to_update_all_informations = get_contact_all_informations(contact_to_update_basic_informations)
+    if 'data' in list_of_contacts_to_update and list_of_contacts_to_update['data']:
+        for contact_to_update_basic_informations in list_of_contacts_to_update['data']:
+            contact_to_update_all_informations = get_contact_all_informations(contact_to_update_basic_informations)
 
-        safe_update_table_row(
-            table=Contacts,
-            filters={"boond_id": contact_to_update_all_informations["boond_id"]},
-            boond_id=contact_to_update_all_informations["boond_id"],
-            boond_rm_id=contact_to_update_all_informations["boond_rm_id"],
-            nom=contact_to_update_all_informations["nom"],
-            prenom=contact_to_update_all_informations["prenom"],
-            provenance=contact_to_update_all_informations["provenance"],
-            detail_provenance=contact_to_update_all_informations["detail_provenance"],
-            date_de_creation=contact_to_update_all_informations["date_de_creation"],
-            derniere_modification=datetime.now().date()
-        )
-        dprint(
-            "Update candidat: {} {}".format(
-                contact_to_update_all_informations['nom'],
-                contact_to_update_all_informations['prenom']
-            ),
-            priority_level=4)
+            safe_update_table_row(
+                table=Contacts,
+                filters={"boond_id": contact_to_update_all_informations["boond_id"]},
+                boond_id=contact_to_update_all_informations["boond_id"],
+                boond_rm_id=contact_to_update_all_informations["boond_rm_id"],
+                nom=contact_to_update_all_informations["nom"],
+                prenom=contact_to_update_all_informations["prenom"],
+                provenance=contact_to_update_all_informations["provenance"],
+                detail_provenance=contact_to_update_all_informations["detail_provenance"],
+                date_de_creation=contact_to_update_all_informations["date_de_creation"],
+                derniere_modification=datetime.now().date()
+            )
+            dprint(
+                "Update candidat: {} {}".format(
+                    contact_to_update_all_informations['nom'],
+                    contact_to_update_all_informations['prenom']
+                ),
+                priority_level=4)
+    else:
+        dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)

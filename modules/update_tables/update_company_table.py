@@ -44,16 +44,18 @@ def check_new_and_update_company(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
-
-    for company_to_update_basic_informations in list_of_companies_to_update['data']:
-        company_to_update_all_informations = get_company_all_informations(company_to_update_basic_informations)
-        safe_update_table_row(
-            table=Company,
-            filters={"boond_id": company_to_update_all_informations["boond_id"]},
-            boond_id=company_to_update_all_informations["boond_id"],
-            boond_rm_id=company_to_update_all_informations["boond_rm_id"],
-            company_name=company_to_update_all_informations["company_name"],
-            country=company_to_update_all_informations["country"],
-            phone=company_to_update_all_informations["phone"]
-        )
-        dprint("Update company: {}".format(company_to_update_all_informations['boond_id']), priority_level=4)
+    if 'data' in list_of_companies_to_update and list_of_companies_to_update['data']:
+        for company_to_update_basic_informations in list_of_companies_to_update['data']:
+            company_to_update_all_informations = get_company_all_informations(company_to_update_basic_informations)
+            safe_update_table_row(
+                table=Company,
+                filters={"boond_id": company_to_update_all_informations["boond_id"]},
+                boond_id=company_to_update_all_informations["boond_id"],
+                boond_rm_id=company_to_update_all_informations["boond_rm_id"],
+                company_name=company_to_update_all_informations["company_name"],
+                country=company_to_update_all_informations["country"],
+                phone=company_to_update_all_informations["phone"]
+            )
+            dprint("Update company: {}".format(company_to_update_all_informations['boond_id']), priority_level=4)
+    else:
+        dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)

@@ -133,34 +133,36 @@ def check_new_and_update_candidates(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
+    if 'data' in list_of_candidates_to_update and list_of_candidates_to_update['data']:
+        for candidate_to_update_basic_informations in list_of_candidates_to_update['data']:
+            candidate_to_update_all_informations = get_candidate_all_informations(candidate_to_update_basic_informations)
 
-    for candidate_to_update_basic_informations in list_of_candidates_to_update['data']:
-        candidate_to_update_all_informations = get_candidate_all_informations(candidate_to_update_basic_informations)
+            safe_update_table_row(
+                table=Candidats,
+                filters={"boond_id": candidate_to_update_all_informations["boond_id"]},
+                boond_id=candidate_to_update_all_informations["boond_id"],
+                boond_rm_id=candidate_to_update_all_informations["boond_rm_id"],
+                nom=candidate_to_update_all_informations["nom"],
+                prenom=candidate_to_update_all_informations["prenom"],
+                date_de_creation=candidate_to_update_all_informations["date_de_creation"],
+                date_derniere_maj=candidate_to_update_all_informations["date_derniere_maj"],
+                provenance_cv=candidate_to_update_all_informations["provenance_cv"],
+                commentaire_provenance_cv=candidate_to_update_all_informations["commentaire_provenance_cv"],
+                recrute=candidate_to_update_all_informations["recrute"],
+                boond_ressource_id=candidate_to_update_all_informations["boond_ressource_id"],
+                prise_de_contact=candidate_to_update_all_informations["prise_de_contact"],
+                entretien_1=candidate_to_update_all_informations["entretien_1"],
+                entretien_2=candidate_to_update_all_informations["entretien_2"],
+                entretien_3=candidate_to_update_all_informations["entretien_3"],
+                signature=candidate_to_update_all_informations["signature"],
+                agence=candidate_to_update_all_informations["agence"]
+            )
 
-        safe_update_table_row(
-            table=Candidats,
-            filters={"boond_id": candidate_to_update_all_informations["boond_id"]},
-            boond_id=candidate_to_update_all_informations["boond_id"],
-            boond_rm_id=candidate_to_update_all_informations["boond_rm_id"],
-            nom=candidate_to_update_all_informations["nom"],
-            prenom=candidate_to_update_all_informations["prenom"],
-            date_de_creation=candidate_to_update_all_informations["date_de_creation"],
-            date_derniere_maj=candidate_to_update_all_informations["date_derniere_maj"],
-            provenance_cv=candidate_to_update_all_informations["provenance_cv"],
-            commentaire_provenance_cv=candidate_to_update_all_informations["commentaire_provenance_cv"],
-            recrute=candidate_to_update_all_informations["recrute"],
-            boond_ressource_id=candidate_to_update_all_informations["boond_ressource_id"],
-            prise_de_contact=candidate_to_update_all_informations["prise_de_contact"],
-            entretien_1=candidate_to_update_all_informations["entretien_1"],
-            entretien_2=candidate_to_update_all_informations["entretien_2"],
-            entretien_3=candidate_to_update_all_informations["entretien_3"],
-            signature=candidate_to_update_all_informations["signature"],
-            agence=candidate_to_update_all_informations["agence"]
-        )
-
-        dprint(
-            "Update candidat: {} {}".format(
-                candidate_to_update_all_informations['nom'],
-                candidate_to_update_all_informations['prenom']
-            ),
-            priority_level=4)
+            dprint(
+                "Update candidat: {} {}".format(
+                    candidate_to_update_all_informations['nom'],
+                    candidate_to_update_all_informations['prenom']
+                ),
+                priority_level=4)
+    else:
+             dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)

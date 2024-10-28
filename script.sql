@@ -1,3 +1,6 @@
+ALTER TABLE projets ADD COLUMN company_name VARCHAR;
+ALTER TABLE temps ADD COLUMN first_name VARCHAR;
+ALTER TABLE TEMPS ADD COLUMN last_name VARCHAR;
 -- Table: candidates
 CREATE TABLE candidates (
     id SERIAL PRIMARY KEY,

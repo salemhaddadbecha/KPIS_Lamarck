@@ -5,7 +5,7 @@ from tools.requests_tools import get_list_of_element
 from tools.safe_actions import safe_dict_get, safe_date_convert, dprint, safe_update_table_row
 
 
-def get_temps_all_informations(basic_data):
+def get_temps_all_informations(basic_data, included_data):
     """
     Permet de recuperer toutes les informations utiles
     d'un temps a partir de ses informations basiques
@@ -21,7 +21,9 @@ def get_temps_all_informations(basic_data):
         "date_de_creation": None,
         "duree": float(),
         "type": str(),
-        "boond_id_projet": int()
+        "boond_id_projet": int(),
+        "first_name": str,
+        "last_name": str
     }
 
     informations["boond_id"] = safe_dict_get(basic_data, ["id"])
@@ -39,6 +41,15 @@ def get_temps_all_informations(basic_data):
     elif safe_dict_get(basic_data, ["attributes", "scorecard", "reference"]) == "durationOfAbsencesUsedTime":
         informations["type"] = "interne"
         informations["boond_id_projet"] = None
+
+    boond_resource_id = safe_dict_get(basic_data, ["relationships", "dependsOn", "data", "id"])
+
+    # Look for the company in the included data
+    for included in included_data:
+        if included["type"] == "resource" and included["id"] == boond_resource_id:
+            informations["first_name"] = safe_dict_get(included, ["attributes", "firstName"])
+            informations["last_name"] = safe_dict_get(included, ["attributes", "lastName"])
+            break
 
     return informations
 
@@ -59,11 +70,13 @@ def check_new_and_update_temps(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
+    included_data = list_of_new_temps.get('included', [])
+
     for temps in list_of_new_temps['data']:
 
         if safe_dict_get(temps, ["attributes", "value"]) is not None and \
                 float(safe_dict_get(temps, ["attributes", "value"])) != float(0):
-            new_temps_all_informations = get_temps_all_informations(temps)
+            new_temps_all_informations = get_temps_all_informations(temps, included_data)
 
             safe_update_table_row(
                 table=Temps,
@@ -73,6 +86,9 @@ def check_new_and_update_temps(start_day, end_day):
                 duree=new_temps_all_informations["duree"],
                 type=new_temps_all_informations["type"],
                 boond_id_projet=new_temps_all_informations["boond_id_projet"],
-                boond_resource_id=new_temps_all_informations["boond_resource_id"]
+                boond_resource_id=new_temps_all_informations["boond_resource_id"],
+                first_name=new_temps_all_informations["first_name"],
+                last_name=new_temps_all_informations["last_name"]
             )
-            dprint("Update candidat: {}".format(new_temps_all_informations['boond_id']), priority_level=4)
+            dprint("Update Temps: {}".format(new_temps_all_informations['boond_id']), priority_level=4)
+

@@ -6,7 +6,7 @@ SECRET_FILE_PATH = 'secrets.json'
 SECRET_CONFIG_STORE = {}
 
 """Command to copy local file to EC2 instance"""
-# scp -i  C:\Users\salem\PycharmProjects\kpis\kpisinstance.pem -r  C:\Users\salem\PycharmProjects\kpis ec2- user@98.80.249.215:/home/ec2-user
+# scp -i  C:\Users\salem\PycharmProjects\kpis\kpisinstance.pem -r  C:\Users\salem\PycharmProjects\kpis ec2-user@18.206.183.130:/home/ec2-user
 
 try:
     with open(SECRET_FILE_PATH) as config:

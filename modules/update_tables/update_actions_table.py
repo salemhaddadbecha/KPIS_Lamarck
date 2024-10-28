@@ -73,20 +73,22 @@ def check_new_and_update_actions_with_param(start_day, end_day, filter):
     dprint("Update action type {}".format(filter), priority_level=4)
     list_of_actions_to_update = get_list_of_element("/actions", period="updated", actionTypes=filter,
                                                     startDate=start_day, endDate=end_day)
+    if 'data' in list_of_actions_to_update and list_of_actions_to_update['data']:
+        for action_to_update_basic_informations in list_of_actions_to_update['data']:
+            action_to_update_all_informations = get_action_all_informations(action_to_update_basic_informations)
 
-    for action_to_update_basic_informations in list_of_actions_to_update['data']:
-        action_to_update_all_informations = get_action_all_informations(action_to_update_basic_informations)
-
-        safe_update_table_row(
-            table=Actions,
-            filters={"boond_id": action_to_update_all_informations["boond_id"]},
-            boond_id=action_to_update_all_informations["boond_id"],
-            date_de_creation=action_to_update_all_informations["date_de_creation"],
-            table_associee=action_to_update_all_informations["table_associee"],
-            type=action_to_update_all_informations["type"],
-            boond_id_element_associe=action_to_update_all_informations["boond_id_element_associe"]
-        )
-        dprint("Update action: {}".format(action_to_update_all_informations['boond_id']), priority_level=5)
+            safe_update_table_row(
+                table=Actions,
+                filters={"boond_id": action_to_update_all_informations["boond_id"]},
+                boond_id=action_to_update_all_informations["boond_id"],
+                date_de_creation=action_to_update_all_informations["date_de_creation"],
+                table_associee=action_to_update_all_informations["table_associee"],
+                type=action_to_update_all_informations["type"],
+                boond_id_element_associe=action_to_update_all_informations["boond_id_element_associe"]
+            )
+            dprint("Update action: {}".format(action_to_update_all_informations['boond_id']), priority_level=5)
+    else:
+            dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)
 
 
 def check_new_and_update_actions(start_day, end_day):

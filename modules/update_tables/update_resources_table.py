@@ -111,32 +111,34 @@ def check_new_and_update_resources(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
+    if 'data' in list_of_resources_to_update and list_of_resources_to_update['data']:
+        for resource_to_update_basic_informations in list_of_resources_to_update['data']:
+            resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations,
+                                                                                list_of_agencies)
 
-    for resource_to_update_basic_informations in list_of_resources_to_update['data']:
-        resource_to_update_all_informations = get_resource_all_informations(resource_to_update_basic_informations,
-                                                                            list_of_agencies)
-
-        safe_update_table_row(
-            table=Ressources,
-            filters={"boond_id": resource_to_update_all_informations["boond_id"]},
-            boond_id=resource_to_update_all_informations["boond_id"],
-            boond_rm_id=resource_to_update_all_informations["boond_rm_id"],
-            date_de_creation=resource_to_update_all_informations["date_de_creation"],
-            nom=resource_to_update_all_informations["nom"],
-            prenom=resource_to_update_all_informations["prenom"],
-            sexe=resource_to_update_all_informations["sexe"],
-            agence=resource_to_update_all_informations["agence"],
-            etat=resource_to_update_all_informations["etat"],
-            profil=resource_to_update_all_informations["profil"],
-            type=resource_to_update_all_informations["type"],
-            est_rm=resource_to_update_all_informations["est_rm"],
-            date_de_recrutement=resource_to_update_all_informations["date_de_recrutement"],
-            debut_derniere_prestation=resource_to_update_all_informations["debut_derniere_prestation"],
-            fin_derniere_prestation=resource_to_update_all_informations["fin_derniere_prestation"],
-        )
-        dprint(
-            "Update resource: {} {}".format(
-                resource_to_update_all_informations['nom'],
-                resource_to_update_all_informations['prenom']
-            ),
-            priority_level=4)
+            safe_update_table_row(
+                table=Ressources,
+                filters={"boond_id": resource_to_update_all_informations["boond_id"]},
+                boond_id=resource_to_update_all_informations["boond_id"],
+                boond_rm_id=resource_to_update_all_informations["boond_rm_id"],
+                date_de_creation=resource_to_update_all_informations["date_de_creation"],
+                nom=resource_to_update_all_informations["nom"],
+                prenom=resource_to_update_all_informations["prenom"],
+                sexe=resource_to_update_all_informations["sexe"],
+                agence=resource_to_update_all_informations["agence"],
+                etat=resource_to_update_all_informations["etat"],
+                profil=resource_to_update_all_informations["profil"],
+                type=resource_to_update_all_informations["type"],
+                est_rm=resource_to_update_all_informations["est_rm"],
+                date_de_recrutement=resource_to_update_all_informations["date_de_recrutement"],
+                debut_derniere_prestation=resource_to_update_all_informations["debut_derniere_prestation"],
+                fin_derniere_prestation=resource_to_update_all_informations["fin_derniere_prestation"],
+            )
+            dprint(
+                "Update resource: {} {}".format(
+                    resource_to_update_all_informations['nom'],
+                    resource_to_update_all_informations['prenom']
+                ),
+                priority_level=4)
+    else:
+            dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)

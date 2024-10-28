@@ -130,6 +130,8 @@ class Temps(Base):
     duree = Column(Float)
     # RelationShip(s)
     boond_resource_id = Column(Integer)
+    first_name = Column(String)
+    last_name = Column(String)
     boond_id_projet = Column(Integer)
 
 

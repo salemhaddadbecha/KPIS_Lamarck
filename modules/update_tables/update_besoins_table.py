@@ -67,19 +67,21 @@ def check_new_and_update_besoins(start_day, end_day):
         startDate=start_day,
         endDate=end_day
     )
+    if 'data' in list_of_besoins_to_update and list_of_besoins_to_update['data']:
+        for besoin_to_update_basic_informations in list_of_besoins_to_update['data']:
+            besoin_to_update_all_informations = get_besoin_all_informations(besoin_to_update_basic_informations)
 
-    for besoin_to_update_basic_informations in list_of_besoins_to_update['data']:
-        besoin_to_update_all_informations = get_besoin_all_informations(besoin_to_update_basic_informations)
-
-        safe_update_table_row(
-            table=Besoins,
-            filters={"boond_id": besoin_to_update_all_informations["boond_id"]},
-            boond_id=besoin_to_update_all_informations["boond_id"],
-            boond_rm_id=besoin_to_update_all_informations["boond_rm_id"],
-            boond_contact_id=besoin_to_update_all_informations["boond_contact_id"],
-            date_de_creation=besoin_to_update_all_informations["date_de_creation"],
-            etat=besoin_to_update_all_informations["etat"],
-            date_maj_drae=besoin_to_update_all_informations["date_maj_drae"],
-            est_interne=besoin_to_update_all_informations["est_interne"]
-        )
-        dprint("Update besoin: {}".format(besoin_to_update_all_informations['boond_id']), priority_level=4)
+            safe_update_table_row(
+                table=Besoins,
+                filters={"boond_id": besoin_to_update_all_informations["boond_id"]},
+                boond_id=besoin_to_update_all_informations["boond_id"],
+                boond_rm_id=besoin_to_update_all_informations["boond_rm_id"],
+                boond_contact_id=besoin_to_update_all_informations["boond_contact_id"],
+                date_de_creation=besoin_to_update_all_informations["date_de_creation"],
+                etat=besoin_to_update_all_informations["etat"],
+                date_maj_drae=besoin_to_update_all_informations["date_maj_drae"],
+                est_interne=besoin_to_update_all_informations["est_interne"]
+            )
+            dprint("Update besoin: {}".format(besoin_to_update_all_informations['boond_id']), priority_level=4)
+    else:
+            dprint(f"No data found for the period {start_day} to {end_day}", priority_level=3)
