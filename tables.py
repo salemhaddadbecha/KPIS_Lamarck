@@ -86,6 +86,7 @@ class Prestations(Base):
     id = Column(Integer, primary_key=True)
     boond_id = Column(Integer)
     # Attributs
+    boond_projet_id = Column(Integer) #select * from prestations pr join projets p on pr.boond_projet_id = p.boond_id;
     date_de_debut = Column(Date)
     date_de_fin = Column(Date)
     etat = Column(String)

@@ -39,7 +39,7 @@ def get_temps_all_informations(basic_data, included_data):
         informations["boond_id_projet"] = None
 
     elif safe_dict_get(basic_data, ["attributes", "scorecard", "reference"]) == "durationOfAbsencesUsedTime":
-        informations["type"] = "interne"
+        informations["type"] = "absent"
         informations["boond_id_projet"] = None
 
     boond_resource_id = safe_dict_get(basic_data, ["relationships", "dependsOn", "data", "id"])

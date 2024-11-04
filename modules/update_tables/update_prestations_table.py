@@ -33,6 +33,7 @@ def get_prestation_all_informations(basic_data):
     informations = {
         "boond_id": int(),
         "boond_resource_id": int(),
+        "boond_projet_id": int(),
         "date_de_debut": None,
         "date_de_fin": None,
         "etat": str(),
@@ -43,6 +44,8 @@ def get_prestation_all_informations(basic_data):
 
     informations["boond_id"] = safe_dict_get(basic_data, ["id"])
     informations["boond_resource_id"] = safe_dict_get(basic_data, ["relationships", "dependsOn", "data", "id"])
+    informations["boond_projet_id"] = safe_dict_get(basic_data, ["relationships", "project", "data", "id"]) #boond_id dans la table projets
+
     informations["date_de_debut"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "startDate"]))
     informations["date_de_fin"] = safe_date_convert(safe_dict_get(basic_data, ["attributes", "endDate"]))
 
@@ -92,6 +95,8 @@ def check_new_and_update_prestations(start_day, end_day):
                 filters={"boond_id": prestation_to_update_all_informations["boond_id"]},
                 boond_id=prestation_to_update_all_informations["boond_id"],
                 boond_resource_id=prestation_to_update_all_informations["boond_resource_id"],
+                boond_projet_id=prestation_to_update_all_informations["boond_projet_id"],
+
                 date_de_debut=prestation_to_update_all_informations["date_de_debut"],
                 date_de_fin=prestation_to_update_all_informations["date_de_fin"],
                 etat=prestation_to_update_all_informations["etat"]
