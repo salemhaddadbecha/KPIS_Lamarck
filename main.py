@@ -18,14 +18,12 @@ from modules.controle_qualite.controle_qualite_kpi8 import controle_qualite_kpi8
 from modules.controle_qualite.controle_qualite_kpi12 import controle_qualite_kpi12
 from modules.controle_qualite.controle_qualite_kpi16 import controle_qualite_kpi16
 
-# end_date = datetime.now().date().strftime('%Y-%m-%d')
-end_date =  '2024-09-02'
-# start_date = (datetime.now().date() - timedelta(days=5)).strftime('%Y-%m-%d')
-start_date = '2024-09-02'
-start_date = datetime.strptime(start_date, "%Y-%m-%d")
-end_dt = datetime.strptime(end_date, "%Y-%m-%d")
+end_date = datetime.now()#.date().strftime('%Y-%m-%d')
+start_date = end_date  - timedelta(days=2)#.strftime('%Y-%m-%d')
+#end_date =   '2024-11-22'
+#start_date =  '2024-11-21'
 current_date = start_date
-while current_date <= end_dt:
+while current_date <= end_date:
     day_str = current_date.strftime("%Y-%m-%d")
     print(f"Processing date: {day_str}")
     check_new_and_update_candidates(start_day=day_str, end_day=day_str)
