@@ -1,9 +1,10 @@
 certifi
 chardet
-charset-normalizer
+#charset-normalizer
 greenlet
 idna
 psycopg2
 requests
 SQLAlchemy
 urllib3
+boto3
