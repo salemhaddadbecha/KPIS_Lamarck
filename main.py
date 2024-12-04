@@ -22,9 +22,9 @@ from modules.controle_qualite.controle_qualite_kpi16 import controle_qualite_kpi
 
 
 # AWS region
-region = 'us-east-1'
-ec2_instance_id = 'i-0e6c2d0ef1dfbb086'  # Replace with your EC2 instance ID
-rds_instance_id = 'lamarcksolutions'  # Replace with your RDS instance ID
+region = 'XXX'
+ec2_instance_id = 'XXX'  # Replace with your EC2 instance ID
+rds_instance_id = 'XXX'  # Replace with your RDS instance ID
 
 ec2 = boto3.client('ec2', region_name=region)
 rds = boto3.client('rds', region_name=region)
