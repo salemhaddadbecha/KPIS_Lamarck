@@ -1,3 +1,12 @@
+CREATE TABLE aws_billing (
+    id SERIAL PRIMARY KEY,
+    usage_date DATE NOT NULL,
+    service_name VARCHAR(255) NOT NULL,
+    cost NUMERIC(10, 2) NOT NULL
+);
+
+
+
 ALTER TABLE projets ADD COLUMN company_name VARCHAR;
 ALTER TABLE temps ADD COLUMN first_name VARCHAR;
 ALTER TABLE TEMPS ADD COLUMN last_name VARCHAR;

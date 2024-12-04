@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 client = boto3.client('ce')
 
 # Define the time range for the query
-start_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+start_date = (datetime.now() - timedelta(days=34)).strftime('%Y-%m-%d')
 end_date = datetime.now().strftime('%Y-%m-%d')
 
 # Fetch cost and usage data
@@ -21,16 +21,16 @@ response = client.get_cost_and_usage(
         {'Type': 'DIMENSION', 'Key': 'SERVICE'}
     ]
 )
-"db_conn_str": "postgresql://kpis:lamarck123@lamarcksolutions.cpaeaqu0asup.us-east-1.rds.amazonaws.com:5432/lamarckinitial",
 
 # PostgreSQL database connection details
 db_params = {
-    'dbname': 'your_database',
-    'user': 'your_username',
-    'password': 'your_password',
-    'host': 'lamarck123@lamarcksolutions.cpaeaqu0asup.us-east-1.rds.amazonaws.com',
+    'dbname': 'lamarckinitial',  # Remplacez "postgresql" par "lamarckinitial"
+    'user': 'kpis',
+    'password': 'lamarck123',
+    'host': 'lamarcksolutions.cpaeaqu0asup.us-east-1.rds.amazonaws.com',
     'port': '5432'
 }
+
 
 # Insert data into PostgreSQL
 def insert_data_to_db(date, service, cost):
