@@ -24,11 +24,11 @@ response = client.get_cost_and_usage(
 
 # PostgreSQL database connection details
 db_params = {
-    'dbname': 'lamarckinitial',  # Remplacez "postgresql" par "lamarckinitial"
-    'user': 'kpis',
-    'password': 'lamarck123',
-    'host': 'lamarcksolutions.cpaeaqu0asup.us-east-1.rds.amazonaws.com',
-    'port': '5432'
+    'dbname': 'XX',   
+    'user': 'XX',
+    'password': 'XX',
+    'host': 'XX',
+    'port': 'XX'
 }
 
 
